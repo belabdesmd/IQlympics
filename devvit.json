@@ -13,21 +13,41 @@
     "dir": "dist/server",
     "entry": "index.cjs"
   },
-  "media": {
-    "dir": "assets"
-  },
   "menu": {
     "items": [
       {
-        "label": "Create a new post",
-        "description": "iqlympics",
-        "location": "subreddit",
+        "endpoint": "/internal/menu/create-post",
         "forUserType": "moderator",
-        "endpoint": "/internal/menu/post-create"
+        "label": "Add IQlympics Gameplay",
+        "location": "subreddit"
       }
     ]
   },
   "triggers": {
-    "onAppInstall": "/internal/on-app-install"
+    "onPostDelete": "/internal/trigger/post-delete"
+  },
+  "settings": {
+    "global": {
+      "API_KEY": {
+        "type": "string",
+        "label": "Backend API Key",
+        "isSecret": true
+      }
+    }
+  },
+  "permissions": {
+    "http": {
+      "domains": [
+        "iqlympics.belfodil.me"
+      ],
+      "enable": true
+    },
+    "redis": true,
+    "reddit": {
+      "enable": true
+    }
+  },
+  "media": {
+    "dir": "assets"
   }
 }
