@@ -1,1 +1,251 @@
 @import 'tailwindcss';
+@import './backgrounds.css';
+@import './icons.css';
+
+/* Design System Base Styles */
+:root {
+  --game-border-radius: 1rem;
+  --game-border-radius-lg: 1.5rem;
+  --game-border-radius-xl: 2rem;
+  --game-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --game-shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --game-shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Global Typography */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Game-specific utility classes */
+@layer utilities {
+  /* Background Gradients */
+  .bg-game-gradient-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  }
+  
+  .bg-game-gradient-success {
+    background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  }
+  
+  .bg-game-gradient-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  }
+  
+  .bg-game-gradient-error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  }
+
+  /* Card Styles */
+  .game-card {
+    @apply bg-white rounded-2xl shadow-lg backdrop-blur-sm;
+  }
+  
+  .game-card-lg {
+    @apply bg-white rounded-2xl shadow-xl backdrop-blur-sm;
+  }
+
+  /* Button Styles */
+  .btn-game-primary {
+    @apply bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-200 uppercase tracking-wide;
+  }
+  
+  .btn-game-success {
+    @apply bg-green-500 hover:bg-green-600 active:bg-green-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-200 uppercase tracking-wide;
+  }
+  
+  .btn-game-warning {
+    @apply bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-200 uppercase tracking-wide;
+  }
+  
+  .btn-game-error {
+    @apply bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-200 uppercase tracking-wide;
+  }
+  
+  .btn-game-secondary {
+    @apply bg-gray-500 hover:bg-gray-600 active:bg-gray-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition-all duration-200 uppercase tracking-wide;
+  }
+  
+  .btn-game-disabled {
+    @apply bg-gray-400 text-gray-200 cursor-not-allowed font-bold py-4 px-6 rounded-xl shadow-lg uppercase tracking-wide;
+  }
+
+  /* Text Styles */
+  .text-game-title {
+    @apply text-3xl font-black uppercase tracking-wider text-center;
+  }
+  
+  .text-game-subtitle {
+    @apply text-xl font-bold uppercase tracking-wide text-center;
+  }
+  
+  .text-game-body {
+    @apply text-base font-semibold;
+  }
+  
+  .text-game-caption {
+    @apply text-sm font-medium;
+  }
+
+  /* Layout Utilities */
+  .game-container {
+    @apply min-h-screen flex items-center justify-center p-4;
+  }
+  
+  .game-content {
+    @apply w-full max-w-md mx-auto;
+  }
+  
+  .game-content-lg {
+    @apply w-full max-w-lg mx-auto;
+  }
+  
+  .game-content-xl {
+    @apply w-full max-w-xl mx-auto;
+  }
+
+  /* Interactive Elements */
+  .game-input {
+    @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-base transition-all duration-200;
+  }
+  
+  .game-radio {
+    @apply w-5 h-5 text-blue-600 bg-gray-100 border-2 border-gray-300 focus:ring-blue-500 focus:ring-2 rounded-full;
+  }
+
+  /* Animation Utilities */
+  .animate-game-bounce {
+    animation: bounce 1s ease-in-out infinite;
+  }
+  
+  .animate-game-pulse {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .animate-game-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  /* Responsive Utilities */
+  .game-mobile-padding {
+    @apply px-4 py-6;
+  }
+  
+  .game-desktop-padding {
+    @apply px-8 py-8;
+  }
+  
+  @screen sm {
+    .game-mobile-padding {
+      @apply px-6 py-8;
+    }
+  }
+  
+  @screen md {
+    .game-mobile-padding {
+      @apply px-8 py-10;
+    }
+  }
+}
+
+/* Component-specific styles */
+@layer components {
+  /* Country List Item */
+  .country-item {
+    @apply flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer rounded-lg transition-all duration-200 border-2 border-transparent hover:border-blue-200;
+  }
+  
+  .country-item.selected {
+    @apply bg-blue-50 border-blue-300;
+  }
+
+  /* Question Card */
+  .question-option {
+    @apply w-full p-4 text-left bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg font-semibold transition-all duration-200 border-2 border-transparent hover:border-gray-300;
+  }
+  
+  .question-option:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-3 overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-full bg-gradient-to-r from-green-400 to-blue-500 rounded-full transition-all duration-500 ease-out;
+  }
+
+  /* Loading States */
+  .loading-spinner {
+    @apply animate-spin rounded-full border-4 border-gray-200 border-t-blue-500;
+  }
+  
+  .loading-dots::after {
+    content: '';
+    animation: loading-dots 1.5s infinite;
+  }
+}
+
+/* Keyframe Animations */
+@keyframes loading-dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* Mobile-first responsive breakpoints */
+@media (max-width: 640px) {
+  .game-card {
+    @apply mx-2 rounded-xl;
+  }
+  
+  .btn-game-primary,
+  .btn-game-success,
+  .btn-game-warning,
+  .btn-game-error,
+  .btn-game-secondary {
+    @apply py-3 px-4 text-sm;
+  }
+  
+  .text-game-title {
+    @apply text-2xl;
+  }
+  
+  .text-game-subtitle {
+    @apply text-lg;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .animate-game-bounce,
+  .animate-game-pulse,
+  .animate-game-spin,
+  .loading-spinner {
+    animation: none;
+  }
+  
+  .transition-all {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .game-card {
+    @apply border-2 border-gray-800;
+  }
+  
+  .btn-game-primary,
+  .btn-game-success,
+  .btn-game-warning,
+  .btn-game-error {
+    @apply border-2 border-gray-800;
+  }
+}
