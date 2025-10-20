@@ -1,0 +1,102 @@
+import { Player } from "../types/player.mock.type";
+import redis from "../redis";
+
+// Redis key builders
+const keys = {
+  player: (username: string) => `players:${username}`,
+  skips: (postId: string) => `post:${postId}:skips`,
+  wrongs: (postId: string) => `post:${postId}:wrongs`,
+  question: (postId: string, username: string) => `post:${postId}:question:${username}`,
+} as const;
+
+export class PlayersMockServices {
+
+  static async getPlayer(username: string): Promise<Player | null> {
+    try {
+      const playerKey = keys.player(username);
+      const playerData = await redis.hGetAll(playerKey);
+
+      // Check if post exists
+      if (!playerData || Object.keys(playerData).length === 0) {
+        return null;
+      }
+
+      // Reconstruct Player object
+      return {
+        username: username,
+        countryCode: playerData.countryCode!
+      };
+    } catch (error) {
+      console.error(`Error getting player ${username}:`, error);
+      throw new Error(
+        `Failed to get player: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  static async createPlayer(username: string, countryCode: string): Promise<void> {
+    try {
+      const playerKey = `players:${username}`;
+
+      // Convert post object to Redis hash format
+      const playerData: Record<string, string> = {
+        username: username,
+        countryCode: countryCode
+      };
+
+      await redis.hSet(playerKey, playerData);
+    } catch (error) {
+      console.error(`Error creating player ${username}:`, error);
+      throw new Error(
+        `Failed to create player: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+  static async addSkip(postId: string, username: string): Promise<void> {
+    await redis.zIncrBy(keys.skips(postId), 1, username);
+  }
+
+  static async getSkips(username: string, postId: string): Promise<number> {
+    const skipsUsed = (await redis.zScore(keys.skips(postId), username)) || 0;
+    return Math.max(0, 3 - skipsUsed); // Return remaining skips (3 total - used)
+  }
+
+  static async addWrong(postId: string, username: string): Promise<void> {
+    await redis.zIncrBy(keys.wrongs(postId), 1, username);
+  }
+
+  static async getWrongs(username: string, postId: string): Promise<number> {
+    return (await redis.zScore(keys.wrongs(postId), username)) || 0;
+  }
+
+  static async setQuestion(username: string, postId: string, questionId: number): Promise<void> {
+    await redis.set(keys.question(postId, username), questionId.toString())
+  }
+
+  static async getQuestionId(username: string, postId: string): Promise<number> {
+    return parseInt(await redis.get(keys.question(postId, username)) || "-1");
+  }
+
+  static async incrementWrongAnswers(username: string, postId: string): Promise<{
+    wrongAnswers: number;
+    gameOver: boolean;
+  }> {
+    try {
+      await this.addWrong(postId, username);
+      const wrongAnswers = await this.getWrongs(username, postId);
+      const gameOver = wrongAnswers >= 5;
+
+      return {
+        wrongAnswers,
+        gameOver
+      };
+    } catch (error) {
+      console.error(`Error incrementing wrong answers for ${username}:`, error);
+      throw new Error(
+        `Failed to increment wrong answers: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
+  }
+
+}

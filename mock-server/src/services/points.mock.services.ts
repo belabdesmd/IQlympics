@@ -1,16 +1,17 @@
-import { PlayersServices } from "./players.services";
+import { PlayersMockServices } from "./players.mock.services";
 import redis from "../redis";
+import { QuestionsMockServices } from "./questions.mock.services";
 
 // Redis key builders
 const keys = {
   points: (countryCode: string) => `points:${countryCode}`,
 } as const;
 
-export class PointsServices {
+export class PointsMockServices {
 
-  static async answerQuestion(username: string, correct: boolean, postId: string): Promise<boolean> {
+  static async answerQuestion(username: string, postId: string, correct: boolean, questionId: number): Promise<boolean> {
     try {
-      const player = await PlayersServices.getPlayer(username);
+      const player = await PlayersMockServices.getPlayer(username);
       if (!player) {
         throw new Error(`Player ${username} does not exist`);
       }
@@ -26,10 +27,14 @@ export class PointsServices {
           value: player.countryCode,
           score: currentCountryPoints + 1
         });
+
+        // remove question
+        await QuestionsMockServices.removeQuestion(questionId);
+
         return true; // Can continue playing
       } else {
-        // Handle wrong answer
-        const wrongResult = await PlayersServices.incrementWrongAnswers(username, postId);
+        // increment wrong answer
+        const wrongResult = await PlayersMockServices.incrementWrongAnswers(username, postId);
 
         // Subtract a point only if player has points to lose
         if (currentPlayerPoints > 0) {
@@ -48,36 +53,6 @@ export class PointsServices {
       throw new Error(
         `Failed to process answer: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
-    }
-  }
-
-  /**
-   * Get player's current points
-   */
-  static async getPlayerPoints(username: string): Promise<number> {
-    try {
-      const player = await PlayersServices.getPlayer(username);
-      if (!player) {
-        return 0;
-      }
-
-      const pointsKey = keys.points(player.countryCode);
-      return await redis.zScore(pointsKey, username) || 0;
-    } catch (error) {
-      console.error(`Error getting player points for ${username}:`, error);
-      return 0;
-    }
-  }
-
-  /**
-   * Get country's total points
-   */
-  static async getCountryPoints(countryCode: string): Promise<number> {
-    try {
-      return await redis.zScore("points", countryCode) || 0;
-    } catch (error) {
-      console.error(`Error getting country points for ${countryCode}:`, error);
-      return 0;
     }
   }
 

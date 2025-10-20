@@ -1,6 +1,6 @@
 import { RedisClient } from '@devvit/redis';
-import { PlayersServices } from "./players.services";
-import { Leaderboard } from "../types/leaderboard.type";
+import { PlayersMockServices } from "./players.mock.services";
+import { Leaderboard } from "../types/leaderboard.mock.type";
 import redis from "../redis";
 
 // Redis key builders
@@ -8,7 +8,7 @@ const keys = {
   points: (countryCode: string) => `points:${countryCode}`
 } as const;
 
-export class LeaderboardServices {
+export class LeaderboardMockServices {
 
   /**
    * Get the global leaderboard with top countries and player's country position
@@ -16,7 +16,7 @@ export class LeaderboardServices {
   static async getLeaderboard(username: string): Promise<Leaderboard> {
     try {
       // Get player to find their country
-      const player = await PlayersServices.getPlayer(username);
+      const player = await PlayersMockServices.getPlayer(username);
       if (!player) {
         throw new Error('Player not found');
       }
@@ -119,7 +119,7 @@ export class LeaderboardServices {
     contributionPercentage: number;
   }> {
     try {
-      const player = await PlayersServices.getPlayer(username);
+      const player = await PlayersMockServices.getPlayer(username);
       if (!player) {
         throw new Error('Player not found');
       }
