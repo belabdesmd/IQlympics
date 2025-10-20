@@ -14,7 +14,7 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
   onNavigateToLeaderboard,
   onGameOver,
 }) => {
-  const { question, status, loading, error, retryable, answerQuestion, skipQuestion, retry } = useGameplay();
+  const { question, status, loading, error, answerQuestion, skipQuestion } = useGameplay();
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isAnswering, setIsAnswering] = useState(false);
@@ -22,10 +22,8 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
 
   // Check for game over condition
   useEffect(() => {
-    if (status?.gameover) {
-      onGameOver();
-    }
-  }, [status?.gameover, onGameOver]);
+    if (status?.gameover) onGameOver();
+  }, [status?.gameover]);
 
   const handleAnswer = async (selectedIndex: number) => {
     if (!question || isAnswering) return;
@@ -50,7 +48,7 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
     setIsSkipping(false);
   };
 
-  const skipsRemaining = status ? Math.max(0, 3 - status.skips) : 0;
+  const skipsRemaining = status ? Math.max(0, status.skips) : 0;
   const canSkip = skipsRemaining > 0 && !loading;
 
   if (error) {
@@ -61,23 +59,6 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
             <div className="text-6xl mb-6">⚠️</div>
             <h1 className="text-game-title text-red-600 mb-6">ERROR</h1>
             <p className="text-game-body text-gray-700 mb-8">{error}</p>
-            <div className="space-y-4">
-              {retryable && (
-                <button
-                  onClick={retry}
-                  disabled={loading}
-                  className="btn-game-error w-full"
-                >
-                  {loading ? 'Retrying...' : 'Try Again'}
-                </button>
-              )}
-              <button
-                onClick={() => window.location.reload()}
-                className="btn-game-secondary w-full"
-              >
-                Refresh Page
-              </button>
-            </div>
           </div>
         </div>
       </div>

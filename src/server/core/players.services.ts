@@ -35,7 +35,7 @@ export class PlayersServices {
     }
   }
 
-  static async createPlayer(redis: RedisClient, username: string, countryCode: string): Promise<void> {
+  static async createPlayer(redis: RedisClient, username: string, countryCode: string): Promise<Player> {
     try {
       const playerKey = `players:${username}`;
 
@@ -46,6 +46,8 @@ export class PlayersServices {
       };
 
       await redis.hSet(playerKey, playerData);
+
+      return {username: username, countryCode: countryCode};
     } catch (error) {
       console.error(`Error creating player ${username}:`, error);
       throw new Error(

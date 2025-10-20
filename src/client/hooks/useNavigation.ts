@@ -9,7 +9,6 @@ export const useNavigation = (initialPage: AppPage = 'country-selection') => {
   });
 
   const navigateTo = useCallback((page: AppPage) => {
-    console.log(page)
     setState(prev => ({
       ...prev,
       currentPage: page,
@@ -18,12 +17,10 @@ export const useNavigation = (initialPage: AppPage = 'country-selection') => {
   }, []);
 
   const setLoading = useCallback((loading: boolean) => {
-    console.log("CALLED LOADING")
     setState(prev => ({ ...prev, loading }));
   }, []);
 
   const setError = useCallback((error: string | null) => {
-    console.log("CALLED ERROR")
     setState(prev => ({ ...prev, error }));
   }, []);
 

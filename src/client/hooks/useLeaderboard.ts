@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Leaderboard } from '../../shared/types';
-import { ErrorHandler } from '../utils/errorHandling';
+import type { Leaderboard, LeaderboardResponse } from '../../shared/types';
+import { ErrorHandler, RetryHandler } from '../utils/errorHandling';
 
 interface LeaderboardState {
   leaderboard: Leaderboard | null;
@@ -21,27 +21,19 @@ export const useLeaderboard = () => {
   const fetchLeaderboard = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null, retryable: false }));
-      
-      /*const result = await RetryHandler.withRetry(async () => {
-        const res = await fetch('/api/leaderboard');
+
+      // TODO: change endpoint
+      const result = await RetryHandler.withRetry(async () => {
+        const res = await fetch('http://localhost:3000/api/leaderboard');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         
         const data: LeaderboardResponse = await res.json();
-        if (!data.success || !data.data) {
+        if (data.status !== "success" || !data.data) {
           throw new Error(data.error || 'Failed to fetch leaderboard');
         }
         
         return data.data;
-      });*/
-      const result: Leaderboard = {
-        topCountries: [{countryCode: "dz", points: 112}, {countryCode: "ma", points: 111}, {countryCode: "fr", points: 110},{countryCode: "dz", points: 112}, {countryCode: "ma", points: 111}, {countryCode: "fr", points: 110}],
-        yourCountry: {
-          countryCode: "dz",
-          points: 112,
-          position: 1
-        },
-        contribution: 12,
-      }
+      });
       
       setState({ leaderboard: result, loading: false, error: null, retryable: false });
       return result;

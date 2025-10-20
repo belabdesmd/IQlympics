@@ -17,7 +17,7 @@ export const CountrySelectionPage: React.FC<CountrySelectionPageProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCountryCode, setSelectedCountryCode] = useState<string>('');
   const [isCreatingPlayer, setIsCreatingPlayer] = useState(false);
-  const {createPlayer, loading, error, retryable, retry} = usePlayer();
+  const {createPlayer, loading, error} = usePlayer();
 
   // Filter countries based on search query
   const filteredCountries = useMemo(() => {
@@ -33,13 +33,9 @@ export const CountrySelectionPage: React.FC<CountrySelectionPageProps> = ({
 
     setIsCreatingPlayer(true);
     const success = await createPlayer(selectedCountryCode);
-    if (success) {
-      onPlayerCreated();
-    }
+    if (success) onPlayerCreated();
     setIsCreatingPlayer(false);
   };
-
-  //TODO: const isPickButtonEnabled = selectedCountryCode && !loading;
 
   return (
     <div className="game-container bg-country-selection bg-pattern-dots">
@@ -66,15 +62,6 @@ export const CountrySelectionPage: React.FC<CountrySelectionPageProps> = ({
           {error && (
             <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 text-red-700 rounded-game">
               <p className="text-game-body font-semibold mb-3">{error}</p>
-              {retryable && (
-                <button
-                  onClick={retry}
-                  disabled={loading}
-                  className="btn-game-error text-sm"
-                >
-                  {loading ? 'Retrying...' : 'Try Again'}
-                </button>
-              )}
             </div>
           )}
 

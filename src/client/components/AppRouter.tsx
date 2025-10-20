@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { usePlayer, useGameplay } from '../hooks';
+import { usePlayer } from '../hooks';
 import { useNavigationContext } from '../contexts/NavigationContext';
 import { LoadingCard } from './LoadingCard';
 import {
@@ -12,7 +12,6 @@ import {
 
 export const AppRouter = () => {
   const {player, loading: playerLoading, error: playerError} = usePlayer();
-  const {status} = useGameplay();
   const {currentPage, navigateTo, setError} = useNavigationContext();
 
   // Navigation handlers
@@ -32,12 +31,11 @@ export const AppRouter = () => {
     navigateTo('game-over');
   }, [navigateTo]);
 
-
   const handleRetry = useCallback(() => {
     window.location.reload();
   }, []);
 
-  // Handle automatic routing based on player existence and game state
+  // Handle automatic routing based on player existence
   useEffect(() => {
     if (playerLoading) return;
 
@@ -45,14 +43,6 @@ export const AppRouter = () => {
     if (playerError) {
       setError(playerError);
       navigateTo('error');
-      return;
-    }
-
-    // Handle game over state - this takes priority over everything else
-    if (status?.gameover) {
-      if (currentPage !== 'game-over') {
-        navigateTo('game-over');
-      }
       return;
     }
 
@@ -64,17 +54,12 @@ export const AppRouter = () => {
       }
     } else {
       // Player exists, default to gameplay unless explicitly on leaderboard
-      if (currentPage !== 'leaderboard' && currentPage !== 'gameplay') {
+      if (currentPage === 'country-selection') {
         navigateTo('gameplay');
       }
     }
-  }, [player, playerLoading, playerError, status?.gameover, navigateTo, setError, currentPage]);
 
-  // Handle app startup navigation
-  useEffect(() => {
-    // This effect runs once on app startup to establish initial route
-    // The main routing logic above will handle subsequent navigation
-  }, []);
+  }, [player, playerLoading, playerError, navigateTo, setError, currentPage]);
 
   // Show loading state while checking player
   if (playerLoading) {

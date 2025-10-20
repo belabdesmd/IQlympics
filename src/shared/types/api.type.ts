@@ -1,6 +1,6 @@
 // API Response wrapper types for consistent error handling
 export interface ApiResponse<T> {
-  success: boolean;
+  status: "success" | "failure";
   data?: T;
   error?: string;
 }
