@@ -60,6 +60,7 @@ export const useGameplay = () => {
       // TODO: update endpoint
       const result = await RetryHandler.withRetry(async () => {
         const res = await fetch('http://localhost:3000/api/gameplay/question');
+        console.log(res);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data: QuestionResponse = await res.json();
@@ -69,6 +70,8 @@ export const useGameplay = () => {
 
         return data.data;
       });
+
+      console.log("Question: " + result)
 
       setState(prev => ({
         ...prev,

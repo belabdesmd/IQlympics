@@ -30,28 +30,32 @@ export const LeaderboardPage: React.FC<LeaderboardPageProps> = ({onBackToGamepla
 
   if (error) {
     return (
-      <div className="game-container bg-error bg-pattern-diagonal">
-        <div className="game-content">
-          <div className="game-card text-center game-mobile-padding">
-            <div className="text-6xl mb-6">❌</div>
-            <h2 className="text-game-title text-red-600 mb-6">ERROR</h2>
-            <p className="text-game-body text-gray-700 mb-8">{error}</p>
-            <div className="space-y-4">
-              {retryable && (
+      <div className="country-selection-container bg-country-selection-image">
+        <div className="country-selection-card">
+          <div className="card-texture-subtle px-4 py-6 rounded-2xl shadow-xl h-full flex flex-col">
+            <div className="text-center mb-6 flex-shrink-0">
+              <div className="text-6xl mb-6">❌</div>
+              <h1 className="text-3xl font-black uppercase tracking-wider text-center text-gray-900 mb-4">ERROR</h1>
+            </div>
+            <div className="flex-1 flex flex-col justify-center">
+              <p className="text-game-body text-gray-700 text-center mb-8">{error}</p>
+              <div className="space-y-4 flex-shrink-0">
+                {retryable && (
+                  <button
+                    onClick={retry}
+                    disabled={loading}
+                    className="btn-game-primary w-full"
+                  >
+                    {loading ? 'Retrying...' : 'Try Again'}
+                  </button>
+                )}
                 <button
-                  onClick={retry}
-                  disabled={loading}
-                  className="btn-game-error w-full"
+                  onClick={onBackToGameplay}
+                  className="btn-game-secondary w-full"
                 >
-                  {loading ? 'Retrying...' : 'Try Again'}
+                  BACK TO GAME
                 </button>
-              )}
-              <button
-                onClick={onBackToGameplay}
-                className="btn-game-secondary w-full"
-              >
-                BACK TO GAME
-              </button>
+              </div>
             </div>
           </div>
         </div>
@@ -61,10 +65,16 @@ export const LeaderboardPage: React.FC<LeaderboardPageProps> = ({onBackToGamepla
 
   if (!leaderboard) {
     return (
-      <div className="game-container bg-leaderboard bg-pattern-dots">
-        <div className="game-content">
-          <div className="game-card text-center game-mobile-padding">
-            <p className="text-game-body text-gray-600">NO LEADERBOARD DATA</p>
+      <div className="country-selection-container bg-country-selection-image">
+        <div className="country-selection-card">
+          <div className="card-texture-subtle px-4 py-6 rounded-2xl shadow-xl h-full flex flex-col">
+            <div className="text-center mb-6 flex-shrink-0">
+              <div className="text-6xl mb-6">📊</div>
+              <h1 className="text-3xl font-black uppercase tracking-wider text-center text-gray-900 mb-4">LEADERBOARD</h1>
+            </div>
+            <div className="flex-1 flex flex-col justify-center">
+              <p className="text-game-body text-gray-700 text-center">NO LEADERBOARD DATA</p>
+            </div>
           </div>
         </div>
       </div>

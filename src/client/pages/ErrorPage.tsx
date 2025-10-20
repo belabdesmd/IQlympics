@@ -12,30 +12,28 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
   onReturnToStart 
 }) => {
   return (
-    <div className="game-container bg-error bg-pattern-diagonal">
-      <div className="game-content">
-        <div className="text-center">
-          {/* Error Image */}
-          <div className="mb-10">
-            <div className="error-warning mb-6">⚠️</div>
-          </div>
-
-          {/* Error Content */}
-          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/30">
-            <h1 className="text-4xl font-black text-white mb-8 drop-shadow-lg uppercase tracking-wider">
+    <div className="country-selection-container bg-country-selection-image">
+      <div className="country-selection-card">
+        <div className="card-texture-subtle px-4 py-6 rounded-2xl shadow-xl h-full flex flex-col">
+          <div className="text-center mb-6 flex-shrink-0">
+            {/* Error Image */}
+            <div className="text-6xl mb-6">⚠️</div>
+            <h1 className="text-3xl font-black uppercase tracking-wider text-center text-gray-900 mb-4">
               ERROR
             </h1>
-            
-            <p className="text-white text-game-lg leading-relaxed mb-10">
+          </div>
+
+          <div className="flex-1 flex flex-col justify-center">
+            <p className="text-game-body text-gray-700 text-center mb-8 leading-relaxed">
               {error}
             </p>
 
             {/* Action Buttons */}
-            <div className="space-y-4">
+            <div className="space-y-4 flex-shrink-0">
               {onRetry && (
                 <button
                   onClick={onRetry}
-                  className="w-full bg-white/30 hover:bg-white/40 active:bg-white/50 text-white font-bold py-4 px-8 rounded-game-lg text-game-lg transition-all duration-200 uppercase shadow-game backdrop-blur-sm"
+                  className="w-full btn-game-primary"
                 >
                   TRY AGAIN
                 </button>
@@ -44,7 +42,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
               {onReturnToStart && (
                 <button
                   onClick={onReturnToStart}
-                  className="w-full bg-white/20 hover:bg-white/30 active:bg-white/40 text-white font-bold py-4 px-8 rounded-game-lg text-game-lg transition-all duration-200 uppercase shadow-game border-2 border-white/40 backdrop-blur-sm"
+                  className="w-full btn-game-secondary"
                 >
                   RETURN TO START
                 </button>
