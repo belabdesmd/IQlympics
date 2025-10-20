@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
+import cors from "cors";
 import { PlayersMockServices } from "./services/players.mock.services";
 import { QuestionsMockServices } from "./services/questions.mock.services";
 import { PointsMockServices } from "./services/points.mock.services";
@@ -60,9 +60,10 @@ app.post('/api/player/create', async (req: Request, res: Response): Promise<void
 app.get('/api/gameplay/question', async (_req: Request, res: Response): Promise<void> => {
   try {
     const question = await QuestionsMockServices.getQuestion();
+    console.log(question);
     if (!question) res.json({status: 'failure'});
     else {
-      await PlayersMockServices.setQuestion("doularkos", "t_1234", question.id)
+      //await PlayersMockServices.setQuestion("doularkos", "t_1234", question.id);
       res.json({status: 'success', data: question});
     }
   } catch (error) {

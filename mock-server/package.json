@@ -1,9 +1,9 @@
 {
   "name": "mock-server",
   "version": "1.0.0",
-  "main": "lib/index.js",
+  "main": "lib/index.mock.js",
   "scripts": {
-    "start": "node --watch lib/index.js",
+    "start": "node --watch lib/index.mock.js",
     "build": "tsc --watch"
   },
   "engines": {
