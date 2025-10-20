@@ -20,6 +20,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+
 /* Game-specific utility classes */
 @layer utilities {
   /* Background Gradients */
@@ -107,6 +109,36 @@ body {
     @apply w-full max-w-xl mx-auto;
   }
 
+  /* Country Selection Specific Layout */
+  .country-selection-container {
+    @apply min-h-screen flex items-center justify-center p-4;
+  }
+
+  .country-selection-card {
+    @apply w-full max-w-md;
+    max-height: 500px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .country-list-container {
+    height: 240px;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  /* Flag Image Styling */
+  .country-flag-image {
+    width: 32px;
+    height: 24px;
+    object-fit: cover;
+    border: none;
+    outline: none;
+    flex-shrink: 0;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
   /* Interactive Elements */
   .game-input {
     @apply w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-base transition-all duration-200;
@@ -155,7 +187,7 @@ body {
 @layer components {
   /* Country List Item */
   .country-item {
-    @apply flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer rounded-lg transition-all duration-200 border-2 border-transparent hover:border-blue-200;
+    @apply flex items-center gap-3 p-4 cursor-pointer rounded-lg border-2 border-transparent;
   }
   
   .country-item.selected {
@@ -248,4 +280,13 @@ body {
   .btn-game-error {
     @apply border-2 border-gray-800;
   }
+}
+/* Flag Image Styling */
+.country-flag-image {
+  width: 24px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
+  vertical-align: middle;
+  display: inline-block;
 }

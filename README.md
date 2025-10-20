@@ -13,7 +13,7 @@ This isn't just another trivia game - it's a **patriotic competition** where you
 ### 🌟 Revolutionary Features That Set It Apart
 
 **1. Olympic-Style National Competition** 🏅
-- Choose from 249 countries and territories with authentic Unicode flag emojis and ISO country codes
+- Choose from a comprehensive database of countries and territories with high-quality flag images
 - Represent your nation in global intellectual competition where every answer matters
 - Creates unprecedented sense of national pride in a trivia format
 
@@ -30,7 +30,7 @@ This isn't just another trivia game - it's a **patriotic competition** where you
 **4. Reddit-Native Social Gaming** 🎮
 - Built specifically for Reddit's Devvit platform with seamless integration
 - Mobile-first responsive design optimized for Reddit's mobile-heavy user base
-- Elegant React.js interface with smooth animations and transitions
+- Elegant React.js interface with smooth animations and card-based layouts
 
 **5. Real-Time Community Building** 🌐
 - Watch your country climb the global rankings as you and fellow citizens contribute
@@ -38,18 +38,18 @@ This isn't just another trivia game - it's a **patriotic competition** where you
 - Combines personal achievement with collective national representation
 
 **6. Advanced Technical Implementation** 🛠️
-- Modern React.js frontend with TypeScript for type safety
+- Modern React.js frontend with TypeScript for complete type safety
 - Custom hooks and context providers for sophisticated state management
 - Comprehensive error handling with retry mechanisms and user-friendly feedback
 - Skeleton loading screens and smooth page transitions for premium user experience
 
 ## 🎯 Core Game Mechanics
 
-**The Challenge**: Answer trivia questions correctly to earn points for yourself and your country, but one wrong answer ends your session immediately.
+**The Challenge**: Answer multiple-choice trivia questions correctly to earn points for yourself and your country, but one wrong answer ends your session immediately.
 
-**The Strategy**: You get exactly 3 skips per game session. Use them wisely to avoid questions you're unsure about, because guessing wrong means game over.
+**The Strategy**: You get a limited number of skips per game session. Use them wisely to avoid questions you're unsure about, because guessing wrong means game over.
 
-**The Stakes**: Every correct answer adds +1 point to both your personal score and your country's global ranking. Your individual contribution percentage is tracked and displayed.
+**The Stakes**: Every correct answer adds points to both your personal score and your country's global ranking. Your individual contribution percentage is tracked and displayed.
 
 **The Competition**: Countries compete globally based on the collective points earned by all their players. Check the live leaderboard to see how your nation ranks against the world.
 
@@ -60,15 +60,15 @@ This isn't just another trivia game - it's a **patriotic competition** where you
 ### Step 1: Choose Your Country 🏳️
 1. **Launch the game** from the Reddit post - the app automatically detects if you're a new player
 2. **Search countries** using the real-time search bar with instant filtering (supports partial matching)
-3. **Browse the scrollable list** of 249 countries and territories with authentic flag emojis and full country names
-4. **Select your nation** by clicking on any country in the list (radio button selection)
+3. **Browse the scrollable list** of 249 countries and territories with high-quality flag images and full country names
+4. **Select your nation** by clicking on any country in the list - it will be highlighted when selected
 5. **Confirm selection** with the "Pick Country" button - you'll represent this country throughout all future games
 
 ### Step 2: Answer Trivia Questions 🧠
-1. **Read each question** carefully displayed on elegant white question cards with rounded corners
-2. **Choose your answer** from 4 multiple-choice options (A, B, C, D) in styled blue buttons
+1. **Read each question** carefully displayed on elegant white question cards with rounded corners and subtle textures
+2. **Choose your answer** from 4 multiple-choice options (A, B, C, D) presented as interactive buttons with hover effects
 3. **Get instant feedback** - correct answers automatically load the next question with smooth transitions
-4. **Track your progress** - monitor your correct/total ratio in the bottom progress counter
+4. **Track your progress** - monitor your correct answers vs total questions in the bottom progress counter (green/total format)
 5. **Navigate easily** - access the leaderboard anytime via the yellow "Leaderboard" button in the top navigation bar
 
 ### Step 3: Strategic Skipping ⏭️
@@ -78,27 +78,27 @@ This isn't just another trivia game - it's a **patriotic competition** where you
 4. **Plan strategically** - save skips for the hardest questions as the button becomes disabled when you run out
 
 ### Step 4: Game Over Conditions ☠️
-- **Wrong Answer**: Game ends immediately when you select an incorrect answer
+- **Wrong Answer**: Game ends immediately when you select an incorrect answer with a dramatic skull emoji display
 - **High Stakes**: Every question becomes a strategic decision between answering and skipping
 - **Automatic Navigation**: Game automatically routes to the game over page when you answer incorrectly
 - **Session-Based**: Each game session ends when you make a wrong choice - use your skips wisely!
 
 ### Step 5: Check the Leaderboard 🏆
-1. **Access leaderboard** via the yellow "Leaderboard" button during gameplay
-2. **View global rankings** - see the top 5 countries with their flags, names, and total points
-3. **Find your country** - see your nation's position and ranking with a special highlighted section
+1. **Access leaderboard** via the yellow "Leaderboard" button during gameplay or from the main navigation
+2. **View global rankings** - see the top 5 countries with their flags, names, and total points in gradient-styled cards
+3. **Find your country** - see your nation's position and ranking with a special highlighted section showing your rank
 4. **Track contribution** - view your personal percentage contribution to your country's total points with a visual progress bar
-5. **Return to gameplay** - use the "Back to Game" button to continue playing and boost your country's standing
+5. **Return to gameplay** - use the "Back to Game" or "← BACK" button to continue playing and boost your country's standing
 
 ---
 
 ## 🏆 Scoring System
 
-- **Correct Answer**: +1 point for you and your country (contributes to national total)
-- **Wrong Answer**: Immediate game over - session ends
-- **Skipped Question**: No points gained, but game continues (strategic option)
+- **Correct Answer**: Points earned for you and your country (contributes to national total)
+- **Wrong Answer**: Immediate game over - session ends with no mercy
+- **Skipped Question**: No points gained, but game continues (strategic survival option)
 - **Country Ranking**: Based on cumulative points from all players representing that country
-- **Personal Contribution**: Your points calculated as a percentage of your country's total score
+- **Personal Contribution**: Your points calculated as a percentage of your country's total score and displayed with a progress bar
 
 ---
 
@@ -123,7 +123,7 @@ This isn't just another trivia game - it's a **patriotic competition** where you
 - **Visual Design**: Tailwind CSS with custom game-specific utility classes and gradient backgrounds
 
 ### Data & Content
-- **Country Database**: Complete dataset of 249 countries and territories with ISO 3166-1 alpha-2 codes and Unicode flag emojis
+- **Country Database**: Complete dataset of 249 countries and territories with ISO 3166-1 alpha-2 codes and high-quality flag images
 - **Search Functionality**: Real-time country search with instant filtering and partial matching
 - **Progress Tracking**: Live counters for correct answers, total questions, and remaining skips
 
@@ -131,12 +131,13 @@ This isn't just another trivia game - it's a **patriotic competition** where you
 
 ## 🎯 Game Strategy Tips
 
-1. **Master the Skip System**: Save your 3 skips for genuinely difficult questions
+1. **Master the Skip System**: Save your limited skips for genuinely difficult questions
 2. **Contribute Consistently**: Regular gameplay sessions increase your country's ranking
 3. **Risk vs. Reward**: Sometimes skipping is better than guessing and ending the game
 4. **Monitor Leaderboards**: Check your country's progress and your contribution percentage
 5. **Play Regularly**: Consistent participation helps maintain your country's global position
 6. **Learn from Game Overs**: Each wrong answer teaches you for future sessions
+7. **Choose Wisely**: Take time to read each question carefully before committing to an answer
 
 ---
 
@@ -148,27 +149,30 @@ The game creates a unique dynamic where individual performance contributes to co
 
 ### ✅ Fully Implemented Features
 - **5 Complete Pages**: Country Selection, Gameplay, Leaderboard, Game Over, and Error screens with full functionality
-- **Smart Navigation**: Automatic routing with NavigationContext and AppRouter components that detect player state
-- **Rich UI Components**: QuestionCard, CountryListItem, ProgressBar, LoadingButton with hover effects and animations
-- **Custom React Hooks**: usePlayer, useGameplay, useLeaderboard for comprehensive state management
+- **Smart Navigation**: Automatic routing with NavigationContext and AppRouter components that detect player state and handle page transitions
+- **Rich UI Components**: QuestionCard, CountryListItem, ProgressBar, LoadingButton with hover effects and smooth animations
+- **Custom React Hooks**: usePlayer, useGameplay, useLeaderboard, useNavigation for comprehensive state management
 - **Complete API Integration**: All endpoints connected with proper error handling, loading states, and retry mechanisms
-- **Comprehensive Country Database**: Complete dataset of 249 countries and territories with authentic Unicode flags, ISO 3166-1 alpha-2 codes, and real-time search functionality
-- **Strategic Gameplay**: 3-skip system with tactical decision-making, instant game over, and progress tracking
+- **Comprehensive Country Database**: Complete dataset of 249 countries and territories with high-quality flag images and real-time search functionality
+- **Strategic Gameplay**: Limited skip system with tactical decision-making, instant game over with skull emoji display, and progress tracking
 - **Responsive Design**: Mobile-first approach with Tailwind CSS, gradient backgrounds, and touch-optimized buttons
 - **Progress Tracking**: Live counters for correct answers, total questions, and remaining skips with visual feedback
 - **Contribution System**: Personal percentage calculation of country's total points with progress bar visualization
 - **Error Boundary**: Comprehensive error handling with ErrorBoundary component and user-friendly error messages
-- **Toast Notifications**: Real-time feedback system for user actions and API responses
+- **Toast Notifications**: Real-time feedback system for user actions and API responses with ToastProvider integration
 - **Loading States**: Skeleton screens for all major components (CountryListSkeleton, QuestionSkeleton, LeaderboardSkeleton)
 - **Retry Logic**: Built-in retry mechanisms with exponential backoff for failed API calls
-- **Page Transitions**: Smooth navigation between game states with PageTransition component
-- **Toast System**: Real-time user feedback with Toast and ToastContainer components
+- **Page Transitions**: Smooth navigation between game states with elegant transitions and loading overlays
 
 ### 🎨 Visual Design Elements
-- **Gradient Backgrounds**: Unique vibrant backgrounds for each page (country selection: dots pattern, gameplay: grid pattern, leaderboard: dots pattern)
-- **Card-Based Layout**: Elegant white cards with subtle textures, rounded corners, and shadow effects
-- **Color-Coded Interface**: Blue for answers, yellow for leaderboard navigation, orange for skip actions, green for progress, red for errors
+- **Gradient Backgrounds**: Unique vibrant backgrounds for each page (country selection: image background, gameplay: grid pattern, leaderboard: dots pattern, game over: diagonal pattern)
+- **Card-Based Layout**: Elegant white cards with subtle textures, rounded corners, and shadow effects using custom CSS classes
+- **Color-Coded Interface**: Interactive buttons for answers, yellow for leaderboard navigation, orange for skip actions, green for progress, red for errors
 - **Typography System**: Consistent text sizing with game-specific utility classes (text-game-title, text-game-subtitle, text-game-body)
-- **Interactive Elements**: Hover effects, button scaling, smooth transitions, and loading animations throughout
-- **Loading States**: Skeleton screens, loading overlays, and animated spinners for better user experience
-- **Accessibility Features**: High contrast support, reduced motion preferences, and semantic HTML structure
+- **Interactive Elements**: Hover effects, button scaling, smooth transitions, and loading animations throughout with backdrop blur effects
+- **Loading States**: Skeleton screens, loading overlays, and animated spinners for better user experience during API calls
+- **Accessibility Features**: High contrast support, semantic HTML structure, touch-optimized interface elements, and reduced motion support
+- **Country Selection**: Scrollable country list with real-time search functionality and elegant card-based selection interface featuring high-quality flag images from flagcdn.com
+- **Question Interface**: Clean question cards with multiple choice buttons, progress tracking, and clear typography
+- **Leaderboard Design**: Ranked country display with flags, position badges, contribution progress bars, and gradient styling
+- **Game Over Screen**: Dramatic presentation with skull emoji and backdrop blur effects for visual impact

@@ -38,7 +38,8 @@
   "permissions": {
     "http": {
       "domains": [
-        "iqlympics.belfodil.me"
+        "iqlympics.belfodil.me",
+        "flagcdn.com"
       ],
       "enable": true
     },

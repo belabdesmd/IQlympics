@@ -25,9 +25,12 @@ export const CountryListItem: React.FC<CountryListItemProps> = ({
         onChange={() => onSelect(country.countryCode)}
         className="game-radio"
       />
-      <span className="text-3xl country-flag-glow" role="img" aria-label={`${country.name} flag`}>
-        {country.flag}
-      </span>
+      <img 
+        src={country.flag}
+        alt={`${country.name} flag`}
+        className="country-flag-image"
+        loading="lazy"
+      />
       <span className="text-game-body text-gray-900 flex-1">
         {country.name}
       </span>
