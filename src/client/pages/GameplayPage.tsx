@@ -11,10 +11,10 @@ interface GameplayPageProps {
 }
 
 export const GameplayPage: React.FC<GameplayPageProps> = ({
-  onNavigateToLeaderboard,
-  onGameOver,
-}) => {
-  const { question, status, loading, error, answerQuestion, skipQuestion } = useGameplay();
+                                                            onNavigateToLeaderboard,
+                                                            onGameOver,
+                                                          }) => {
+  const {question, status, loading, error, answerQuestion, skipQuestion} = useGameplay();
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isAnswering, setIsAnswering] = useState(false);
@@ -29,8 +29,8 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
     if (!question || isAnswering) return;
 
     setIsAnswering(true);
-    const isCorrect = await answerQuestion(selectedIndex, question.correctIndex);
-    
+    const isCorrect = await answerQuestion(selectedIndex, question.correctIndex, question.id);
+
     // Update counters
     setQuestionsAnswered(prev => prev + 1);
     if (isCorrect) {
@@ -41,7 +41,7 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
 
   const handleSkip = async () => {
     if (isSkipping) return;
-    
+
     setIsSkipping(true);
     await skipQuestion();
     setQuestionsAnswered(prev => prev + 1);
@@ -68,9 +68,10 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
   return (
     <div className="min-h-screen bg-gameplay bg-pattern-grid flex flex-col">
       {/* Top Bar */}
-      <div className="flex justify-between items-center p-4 bg-white/20 backdrop-blur-game border-b border-white/20">
+      <div
+        className="flex justify-between items-center p-4 bg-white/20 backdrop-blur-game border-b border-white/20">
         <div className="flex-1"></div>
-        
+
         {/* Logo/Title */}
         <div className="flex-1 text-center">
           <div className="flex items-center justify-center gap-2">
@@ -81,7 +82,7 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
             <div className="text-2xl">🏆</div>
           </div>
         </div>
-        
+
         {/* Leaderboard Button */}
         <div className="flex-1 flex justify-end">
           <LoadingButton
@@ -97,7 +98,7 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center p-4">
         {loading && !question ? (
-          <QuestionSkeleton />
+          <QuestionSkeleton/>
         ) : question ? (
           <QuestionCard
             question={question}
@@ -112,10 +113,12 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
       </div>
 
       {/* Bottom Bar */}
-      <div className="flex justify-between items-center p-4 bg-white/20 backdrop-blur-game border-t border-white/20">
+      <div
+        className="flex justify-between items-center p-4 bg-white/20 backdrop-blur-game border-t border-white/20">
         {/* Progress Counter */}
         <div className="flex-1">
-          <div className="bg-white/30 rounded-game px-4 py-2 text-white font-bold text-center backdrop-blur-sm">
+          <div
+            className="bg-white/30 rounded-game px-4 py-2 text-white font-bold text-center backdrop-blur-sm">
             <span className="text-green-200 text-game-lg">{correctAnswers}</span>
             <span className="mx-2 text-game-base">/</span>
             <span className="text-game-lg">{questionsAnswered}</span>
@@ -143,7 +146,7 @@ export const GameplayPage: React.FC<GameplayPageProps> = ({
       </div>
 
       {/* Loading Overlay for answer processing */}
-      <LoadingOverlay 
+      <LoadingOverlay
         isVisible={isAnswering}
         message="Processing answer..."
         transparent

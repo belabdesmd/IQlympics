@@ -1,5 +1,6 @@
 import { RedisClient } from '@devvit/redis';
 import { PlayersServices } from "./players.services";
+import { QuestionsServices } from "./questions.services";
 
 // Redis key builders
 const keys = {
@@ -8,7 +9,7 @@ const keys = {
 
 export class PointsServices {
 
-  static async answerQuestion(redis: RedisClient, username: string, correct: boolean, postId: string): Promise<boolean> {
+  static async answerQuestion(redis: RedisClient, username: string, postId: string, correct: boolean, questionId: number): Promise<boolean> {
     try {
       const player = await PlayersServices.getPlayer(redis, username);
       if (!player) {
@@ -26,6 +27,10 @@ export class PointsServices {
           member: player.countryCode,
           score: currentCountryPoints + 1
         });
+
+        // remove question
+        await QuestionsServices.removeQuestion(redis, questionId);
+
         return true; // Can continue playing
       } else {
         // Handle wrong answer
@@ -48,36 +53,6 @@ export class PointsServices {
       throw new Error(
         `Failed to process answer: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
-    }
-  }
-
-  /**
-   * Get player's current points
-   */
-  static async getPlayerPoints(redis: RedisClient, username: string): Promise<number> {
-    try {
-      const player = await PlayersServices.getPlayer(redis, username);
-      if (!player) {
-        return 0;
-      }
-
-      const pointsKey = keys.points(player.countryCode);
-      return await redis.zScore(pointsKey, username) || 0;
-    } catch (error) {
-      console.error(`Error getting player points for ${username}:`, error);
-      return 0;
-    }
-  }
-
-  /**
-   * Get country's total points
-   */
-  static async getCountryPoints(redis: RedisClient, countryCode: string): Promise<number> {
-    try {
-      return await redis.zScore("points", countryCode) || 0;
-    } catch (error) {
-      console.error(`Error getting country points for ${countryCode}:`, error);
-      return 0;
     }
   }
 

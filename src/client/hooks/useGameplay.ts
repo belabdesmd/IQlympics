@@ -104,7 +104,7 @@ export const useGameplay = () => {
   }, [fetchStatus, fetchQuestion]);
 
   // Submit answer
-  const answerQuestion = useCallback(async (selectedIndex: number, correctIndex: number): Promise<boolean> => {
+  const answerQuestion = useCallback(async (selectedIndex: number, correctIndex: number, questionId: number): Promise<boolean> => {
     try {
       setState(prev => ({...prev, loading: true, error: null}));
 
@@ -115,7 +115,7 @@ export const useGameplay = () => {
         const res = await fetch('http://localhost:3000/api/gameplay/answer', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({correct: isCorrect}),
+          body: JSON.stringify({correct: isCorrect, questionId: questionId}),
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);

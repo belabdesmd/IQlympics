@@ -120,8 +120,32 @@ router.post('/api/player/create', async (req, res): Promise<void> => {
 // Get Question
 router.get('/api/gameplay/question', async (_req, res): Promise<void> => {
   try {
-    const question = QuestionsServices.getRandomQuestion();
-    res.json({status: 'success', data: question});
+    // get username
+    const username = await reddit.getCurrentUsername();
+    if (!username) {
+      res.status(404).json({
+        status: 'error',
+        message: 'Username not found',
+      });
+      return;
+    }
+
+    // get postId
+    const {postId} = context;
+    if (!postId) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Post is deleted',
+      });
+      return;
+    }
+
+    const question = await QuestionsServices.getQuestion(redis);
+    if (!question) res.json({status: 'failure'}); // TODO: handle failure
+    else {
+      await PlayersServices.setQuestion(redis, username, postId, question.id);
+      res.json({status: 'success', data: question});
+    }
   } catch (error) {
     console.error('Error getting question:', error);
     res.status(500).json({
@@ -134,7 +158,7 @@ router.get('/api/gameplay/question', async (_req, res): Promise<void> => {
 // Submit Answer
 router.post('/api/gameplay/answer', async (req, res): Promise<void> => {
   try {
-    const {isCorrect} = req.body;
+    const {questionId, isCorrect} = req.body;
 
     // get username
     const username = await reddit.getCurrentUsername();
@@ -157,7 +181,7 @@ router.post('/api/gameplay/answer', async (req, res): Promise<void> => {
     }
 
     // answer question
-    const canContinue = await PointsServices.answerQuestion(redis, username, isCorrect, postId);
+    const canContinue = await PointsServices.answerQuestion(redis, username, postId, isCorrect, questionId);
 
     // return
     res.json({status: 'success', data: canContinue});
@@ -209,7 +233,12 @@ router.get('/api/gameplay/skip', async (_req, res): Promise<void> => {
     await PlayersServices.addSkip(redis, postId, username);
 
     // return
-    res.json({status: 'success', data: QuestionsServices.getRandomQuestion()});
+    const question = await QuestionsServices.getQuestion(redis);
+    if (!question) res.json({status: 'failure'}); // TODO: handle failure
+    else {
+      await PlayersServices.setQuestion(redis, username, postId, question.id);
+      res.json({status: 'success', data: question});
+    }
   } catch (error) {
     console.error('Error processing skip:', error);
     res.status(500).json({
