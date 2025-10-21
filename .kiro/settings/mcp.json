@@ -5,11 +5,7 @@
       "args": [
         "-y",
         "@devvit/mcp"
-      ],
-      "disabled": false,
-      "autoApprove": [
-        "devvit_search"
-      ]
+      ]      
     }
   }
 }
