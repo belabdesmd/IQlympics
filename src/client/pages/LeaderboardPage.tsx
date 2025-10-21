@@ -1,7 +1,7 @@
 import React from 'react';
 import { ProgressBar } from '../components';
 import { LeaderboardSkeleton } from '../components/LeaderboardSkeleton';
-import { LoadingButton } from '../components/LoadingButton';
+
 import { useLeaderboard } from '../hooks';
 import { findCountryByCode } from '../../shared';
 
@@ -14,16 +14,20 @@ export const LeaderboardPage: React.FC<LeaderboardPageProps> = ({onBackToGamepla
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-leaderboard bg-pattern-dots p-4">
-        {/* Top Bar Skeleton */}
-        <div className="flex items-center justify-between mb-8 max-w-2xl mx-auto">
-          <div className="w-24 h-12 bg-white/30 rounded-game animate-pulse"></div>
-          <div className="w-48 h-8 bg-white/30 rounded animate-pulse"></div>
-          <div className="w-24"></div>
-        </div>
+      <div className="country-selection-container bg-country-selection-image">
+        <div className="w-full max-w-lg mx-auto h-full max-h-[560px] flex flex-col overflow-hidden">
+          {/* Top Bar Skeleton */}
+          <div className="flex items-center justify-between p-2 flex-shrink-0">
+            <div className="w-10 h-10 bg-white/30 rounded-full animate-pulse"></div>
+            <div className="w-32 h-6 bg-white/30 rounded animate-pulse"></div>
+            <div className="w-10"></div>
+          </div>
 
-        {/* Main Content Skeleton */}
-        <LeaderboardSkeleton/>
+          {/* Main Content Skeleton */}
+          <div className="flex-1 p-4 pt-2 overflow-hidden">
+            <LeaderboardSkeleton/>
+          </div>
+        </div>
       </div>
     );
   }
@@ -82,125 +86,120 @@ export const LeaderboardPage: React.FC<LeaderboardPageProps> = ({onBackToGamepla
   }
 
   return (
-    <div className="min-h-screen bg-leaderboard bg-pattern-dots p-4">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between mb-8 max-w-2xl mx-auto">
-        <LoadingButton
-          onClick={onBackToGameplay}
-          disabled={loading}
-          className="bg-white/30 hover:bg-white/40 active:bg-white/50 text-white font-bold py-3 px-6 rounded-game transition-all duration-200 uppercase tracking-wide shadow-game backdrop-blur-sm"
-        >
-          ← BACK
-        </LoadingButton>
-        <h1 className="text-game-title text-white drop-shadow-lg">
-          LEADERBOARD
-        </h1>
-        <div className="w-24"></div>
-        {/* Spacer for centering */}
-      </div>
-
-      {/* Main Content Card */}
-      <div className="game-card-lg game-mobile-padding max-w-2xl mx-auto">
-        {/* Top 5 Countries */}
-        <div className="mb-10">
-          <h2 className="text-game-subtitle text-gray-800 mb-6 text-center">
-            TOP 5 COUNTRIES
-          </h2>
-          <div className="space-y-4">
-            {leaderboard.topCountries.map((country, index) => {
-              const countryData = findCountryByCode(country.countryCode);
-              return (
-                <div
-                  key={country.countryCode}
-                  className="flex items-center justify-between p-5 bg-gradient-to-r from-gray-50 to-blue-50 rounded-game-lg border-2 border-gray-200 hover:border-blue-300 transition-all duration-200 shadow-game"
-                >
-                  <div className="flex items-center space-x-5">
-                    <div
-                      className={`position-badge ${index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : ''}`}>
-                      {index + 1}
-                    </div>
-                    <div className="text-4xl">
-                      {countryData?.flag || '🏳️'}
-                    </div>
-                    <div>
-                      <p className="text-game-body text-gray-800">
-                        {countryData?.name || country.countryCode}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-game-2xl font-black text-game-blue">
-                      {country.points}
-                    </p>
-                    <p className="text-game-caption text-gray-500">POINTS</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+    <div className="country-selection-container bg-country-selection-image">
+      <div className="w-full max-w-lg mx-auto h-full max-h-[560px] flex flex-col overflow-hidden">
+        {/* Top Bar with Back Icon */}
+        <div className="flex items-center justify-between p-2 flex-shrink-0">
+          <button
+            onClick={onBackToGameplay}
+            disabled={loading}
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 border-none shadow-lg bg-white hover:bg-gray-100 active:bg-gray-200 text-gray-800 cursor-pointer"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+          </button>
+          <h1 className="text-3xl font-black uppercase tracking-wider text-white drop-shadow-lg">
+            LEADERBOARD
+          </h1>
+          <div className="w-10"></div>
         </div>
 
-        {/* Separator */}
-        <div className="border-t-4 border-gray-200 my-10"></div>
+        {/* Main Content Card */}
+        <div className="flex-1 p-4 pt-2 min-h-0">
+          <div className="card-texture-subtle rounded-2xl shadow-xl h-full flex flex-col max-h-[490px]">
+            {/* Fixed Header */}
+            <div className="px-4 pt-4 pb-2 flex-shrink-0">
+              <h2 className="text-lg font-bold uppercase tracking-wide text-center text-gray-900">
+                TOP 5 COUNTRIES
+              </h2>
+            </div>
 
-        {/* Your Country Position */}
-        <div className="mb-8">
-          <h3 className="text-game-subtitle text-gray-800 mb-6 text-center">
-            YOUR COUNTRY
-          </h3>
-          <div
-            className="p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-game-lg border-2 border-blue-300 shadow-game-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-5">
-                <div className="position-badge"
-                     style={{width: '48px', height: '48px', fontSize: '18px'}}>
-                  #{leaderboard.yourCountry.position}
-                </div>
-                <div className="text-5xl">
-                  {findCountryByCode(leaderboard.yourCountry.countryCode)?.flag || '🏳️'}
-                </div>
-                <div>
-                  <p className="text-game-lg text-gray-800">
-                    {findCountryByCode(leaderboard.yourCountry.countryCode)?.name || leaderboard.yourCountry.countryCode}
-                  </p>
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto px-4 pb-4 min-h-0">
+              {/* Top 5 Countries */}
+              <div className="space-y-3 mb-4">
+                {leaderboard.topCountries.map((country, index) => {
+                  const countryData = findCountryByCode(country.countryCode);
+                  return (
+                    <div
+                      key={country.countryCode}
+                      className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border-2 border-gray-200"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
+                            index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-600' : 'bg-blue-500'
+                          }`}>
+                          {index + 1}
+                        </div>
+                        <img
+                          src={countryData?.flag || 'https://flagcdn.com/w40/xx.png'}
+                          alt={`${countryData?.name || country.countryCode} flag`}
+                          className="country-flag-image"
+                          loading="lazy"
+                        />
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {countryData?.name || country.countryCode}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-black text-blue-600">
+                          {country.points}
+                        </p>
+                        <p className="text-xs text-gray-500">POINTS</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Separator */}
+              <div className="border-t-2 border-gray-200 my-4"></div>
+
+              {/* Your Country Position */}
+              <div className="mb-4">
+                <div className="p-4 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-lg border-2 border-blue-300">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                        #{leaderboard.yourCountry.position}
+                      </div>
+                      <img
+                        src={findCountryByCode(leaderboard.yourCountry.countryCode)?.flag || 'https://flagcdn.com/w40/xx.png'}
+                        alt={`${findCountryByCode(leaderboard.yourCountry.countryCode)?.name || leaderboard.yourCountry.countryCode} flag`}
+                        className="country-flag-image"
+                        loading="lazy"
+                      />
+                      <div>
+                        <p className="text-base font-semibold text-gray-800">
+                          {findCountryByCode(leaderboard.yourCountry.countryCode)?.name || leaderboard.yourCountry.countryCode}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xl font-black text-purple-600">
+                        {leaderboard.yourCountry.points}
+                      </p>
+                      <p className="text-xs text-gray-500">POINTS</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-game-3xl font-black text-game-purple">
-                  {leaderboard.yourCountry.points}
-                </p>
-                <p className="text-game-caption text-gray-500">POINTS</p>
+
+              {/* Contribution Progress Bar */}
+              <div>
+                <ProgressBar
+                  current={0}
+                  total={100}
+                  percentage={leaderboard.contribution}
+                  label="Contribution to your country's total points"
+                />
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Contribution Progress Bar */}
-        <div className="mb-8">
-          <h4 className="text-game-lg text-gray-800 mb-4 text-center">
-            YOUR CONTRIBUTION
-          </h4>
-          <ProgressBar
-            current={0}
-            total={100}
-            percentage={leaderboard.contribution}
-            label="Contribution to your country's total points"
-            className="mb-3"
-          />
-          <p className="text-center text-game-body text-gray-600">
-            {Math.round(leaderboard.contribution)}% OF YOUR COUNTRY'S POINTS
-          </p>
-        </div>
-
-        {/* Back Button */}
-        <div className="text-center pt-6">
-          <LoadingButton
-            onClick={onBackToGameplay}
-            disabled={loading}
-            className="btn-game-primary transform hover:scale-105 shadow-game-lg"
-          >
-            BACK TO GAME
-          </LoadingButton>
         </div>
       </div>
     </div>

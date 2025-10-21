@@ -5,11 +5,13 @@ import { QuestionsMockServices } from "./services/questions.mock.services";
 import { PointsMockServices } from "./services/points.mock.services";
 import { LeaderboardMockServices } from "./services/leaderboard.mock.services";
 import { initRedis } from "./redis";
+import { configDotenv } from "dotenv";
 
 // -------------------
 // App Initialization
 // -------------------
 const app: Application = express();
+configDotenv();
 
 // Port configuration (fallback to 3000 if not set in .env)
 const PORT: number = parseInt(process.env.PORT || '3000', 10);
