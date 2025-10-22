@@ -1,10 +1,12 @@
 import { Question } from "../types/question.mock.type";
 import redis from "../redis";
+import { PlayersMockServices } from "./players.mock.services";
 
 // Redis key builders
 const keys = {
   questions: () => `questions`,
-  questionIndex: () => `questionIndex`
+  questionIndex: () => `questionIndex`,
+  points: (countryCode: string) => `points:${countryCode}`,
 } as const;
 
 export class QuestionsMockServices {
@@ -48,12 +50,12 @@ export class QuestionsMockServices {
     return JSON.parse(JSON.parse(await response.text()).candidates[0].content.parts[0].text) as Question[];
   }
 
-  static async getQuestion(questionId?: number): Promise<Question | undefined> {
+  static async getQuestion(questionId: number): Promise<Question | undefined> {
     // get questions remaining
     const count = await redis.hLen(keys.questions());
 
     // refresh by adding more questions
-    if (count < 20) {
+    if (count < 10) {
       const nextId = parseInt(await redis.get(keys.questionIndex()) ?? "0");
       const newQuestions = await this.fetchQuestionsRemotely(nextId);
       const fields: Record<string, string> = {};
@@ -65,18 +67,68 @@ export class QuestionsMockServices {
     }
 
     // get random question
-    if (questionId) {
+    if (questionId !== -1) {
       const questionData = await redis.hGet(keys.questions(), questionId.toString());
       return questionData ? JSON.parse(questionData) : undefined;
     } else {
       const ids = await redis.hKeys(keys.questions());
-      const randomId = ids[Math.floor(Math.random() * ids.length)];
-      return JSON.parse((await redis.hGet(keys.questions(), randomId))!);
+      const randomId = ids[Math.floor(Math.random() * ids.length)]!;
+      const questionData = await redis.hGet(keys.questions(), randomId);
+      return questionData ? JSON.parse(questionData) : undefined;
     }
   }
 
   static async removeQuestion(questionId: number): Promise<void> {
     await redis.hDel(keys.questions(), [questionId.toString()]);
+  }
+
+  static async answerQuestion(username: string, postId: string, correct: boolean, questionId: number): Promise<Question | null | undefined> {
+    try {
+      const player = await PlayersMockServices.getPlayer(username);
+      if (!player) {
+        throw new Error(`Player ${username} does not exist`);
+      }
+
+      const pointsKey = keys.points(player.countryCode);
+      const currentPlayerPoints = await redis.zScore(pointsKey, username) || 0;
+      const currentCountryPoints = await redis.zScore("points", player.countryCode) || 0;
+
+      if (correct) {
+        // TODO: add answer as comment?
+
+        // Add a point for correct answer
+        await redis.zIncrBy(pointsKey, 1, username);
+        await redis.zAdd("points", {
+          value: player.countryCode,
+          score: currentCountryPoints + 1
+        });
+
+        // remove question
+        await this.removeQuestion(questionId);
+
+        return this.getQuestion(-1); // return question
+      } else {
+        // Handle wrong answer
+        const gameOver = await PlayersMockServices.addWrong(username, postId);
+
+        // Subtract a point only if player has points to lose
+        if (currentPlayerPoints > 0) {
+          await redis.zIncrBy(pointsKey, -1, username);
+          await redis.zAdd("points", {
+            value: player.countryCode,
+            score: Math.max(0, currentCountryPoints - 1)
+          });
+        }
+
+        // Return either question (next gameplay) or null if gameover
+        return !gameOver ? this.getQuestion(-1) : null;
+      }
+    } catch (error) {
+      console.error(`Error processing answer for ${username}:`, error);
+      throw new Error(
+        `Failed to process answer: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
   }
 
 }

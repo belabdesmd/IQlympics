@@ -34,7 +34,7 @@ export class PlayersMockServices {
     }
   }
 
-  static async createPlayer(username: string, countryCode: string): Promise<void> {
+  static async createPlayer(username: string, countryCode: string): Promise<Player> {
     try {
       const playerKey = `players:${username}`;
 
@@ -45,6 +45,8 @@ export class PlayersMockServices {
       };
 
       await redis.hSet(playerKey, playerData);
+
+      return {username: username, countryCode: countryCode};
     } catch (error) {
       console.error(`Error creating player ${username}:`, error);
       throw new Error(
@@ -53,21 +55,22 @@ export class PlayersMockServices {
     }
   }
 
-  static async addSkip(postId: string, username: string): Promise<void> {
+  static async addSkip(username: string, postId: string): Promise<void> {
     await redis.zIncrBy(keys.skips(postId), 1, username);
   }
 
-  static async getSkips(username: string, postId: string): Promise<number> {
+  static async getRemainingSkips(username: string, postId: string): Promise<number> {
     const skipsUsed = (await redis.zScore(keys.skips(postId), username)) || 0;
     return Math.max(0, 3 - skipsUsed); // Return remaining skips (3 total - used)
   }
 
-  static async addWrong(postId: string, username: string): Promise<void> {
+  static async addWrong(postId: string, username: string): Promise<boolean> {
     await redis.zIncrBy(keys.wrongs(postId), 1, username);
+    return await this.isGameOver(username, postId);
   }
 
-  static async getWrongs(username: string, postId: string): Promise<number> {
-    return (await redis.zScore(keys.wrongs(postId), username)) || 0;
+  static async isGameOver(username: string, postId: string): Promise<boolean> {
+    return (await redis.zScore(keys.wrongs(postId), username) || 0) >= 5;
   }
 
   static async setQuestion(username: string, postId: string, questionId: number): Promise<void> {
@@ -76,27 +79,6 @@ export class PlayersMockServices {
 
   static async getQuestionId(username: string, postId: string): Promise<number> {
     return parseInt(await redis.get(keys.question(postId, username)) || "-1");
-  }
-
-  static async incrementWrongAnswers(username: string, postId: string): Promise<{
-    wrongAnswers: number;
-    gameOver: boolean;
-  }> {
-    try {
-      await this.addWrong(postId, username);
-      const wrongAnswers = await this.getWrongs(username, postId);
-      const gameOver = wrongAnswers >= 5;
-
-      return {
-        wrongAnswers,
-        gameOver
-      };
-    } catch (error) {
-      console.error(`Error incrementing wrong answers for ${username}:`, error);
-      throw new Error(
-        `Failed to increment wrong answers: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
-    }
   }
 
 }

@@ -1,7 +1,6 @@
-import { RedisClient } from '@devvit/redis';
-import { PlayersMockServices } from "./players.mock.services";
 import { Leaderboard } from "../types/leaderboard.mock.type";
 import redis from "../redis";
+import { PlayersMockServices } from "./players.mock.services";
 
 // Redis key builders
 const keys = {
@@ -10,9 +9,6 @@ const keys = {
 
 export class LeaderboardMockServices {
 
-  /**
-   * Get the global leaderboard with top countries and player's country position
-   */
   static async getLeaderboard(username: string): Promise<Leaderboard> {
     try {
       // Get player to find their country
@@ -32,7 +28,7 @@ export class LeaderboardMockServices {
           };
         })
       );
-      
+
       // Sort by points descending and take top 5
       const topCountries = countriesWithScores
         .sort((a, b) => b.points - a.points)
@@ -40,7 +36,7 @@ export class LeaderboardMockServices {
 
       // Get player's country position and points
       const playerCountryPoints = await redis.zScore('points', player.countryCode) || 0;
-      
+
       // Calculate position by counting countries with higher scores
       const higherScoringCountries = await Promise.all(
         allCountriesData.map(async (item: any) => {
@@ -50,7 +46,7 @@ export class LeaderboardMockServices {
         })
       );
       const playerCountryRank = higherScoringCountries.reduce((sum: number, val: number) => sum + val, 0);
-      
+
       // Get player's individual contribution to their country
       const playerPoints = await redis.zScore(keys.points(player.countryCode), username) || 0;
       const contributionPercentage = playerCountryPoints > 0 ? (playerPoints / playerCountryPoints) * 100 : 0;
@@ -70,73 +66,6 @@ export class LeaderboardMockServices {
       console.error('Error getting leaderboard:', error);
       throw new Error(
         `Failed to get leaderboard: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
-    }
-  }
-
-  /**
-   * Get country ranking information
-   */
-  static async getCountryRanking(redis: RedisClient, countryCode: string): Promise<{
-    position: number;
-    points: number;
-    totalCountries: number;
-  }> {
-    try {
-      const points = await redis.zScore('points', countryCode) || 0;
-      const totalCountries = await redis.zCard('points');
-      
-      // Calculate position by counting countries with higher scores
-      const allCountriesData = await redis.zRange('points', 0, -1);
-      const higherScoringCountries = await Promise.all(
-        allCountriesData.map(async (item: any) => {
-          const countryCode = typeof item === 'string' ? item : item.member;
-          const score = await redis.zScore('points', countryCode) || 0;
-          return score > points ? 1 : 0;
-        })
-      );
-      const rank = higherScoringCountries.reduce((sum: number, val: number) => sum + val, 0);
-
-      return {
-        position: rank + 1,
-        points,
-        totalCountries
-      };
-    } catch (error) {
-      console.error('Error getting country ranking:', error);
-      throw new Error(
-        `Failed to get country ranking: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
-    }
-  }
-
-  /**
-   * Get player's contribution to their country
-   */
-  static async getPlayerContribution(redis: RedisClient, username: string): Promise<{
-    playerPoints: number;
-    countryPoints: number;
-    contributionPercentage: number;
-  }> {
-    try {
-      const player = await PlayersMockServices.getPlayer(username);
-      if (!player) {
-        throw new Error('Player not found');
-      }
-
-      const playerPoints = await redis.zScore(keys.points(player.countryCode), username) || 0;
-      const countryPoints = await redis.zScore('points', player.countryCode) || 0;
-      const contributionPercentage = countryPoints > 0 ? (playerPoints / countryPoints) * 100 : 0;
-
-      return {
-        playerPoints,
-        countryPoints,
-        contributionPercentage: Math.round(contributionPercentage * 100) / 100
-      };
-    } catch (error) {
-      console.error('Error getting player contribution:', error);
-      throw new Error(
-        `Failed to get player contribution: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }

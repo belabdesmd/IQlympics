@@ -272,7 +272,7 @@ router.get('/api/gameplay/skip', async (_req, res): Promise<void> => {
     const remainingSkips = await PlayersServices.getRemainingSkips(username, postId);
 
     // Add skip (this increments the skip count)
-    await PlayersServices.addSkip(postId, username);
+    await PlayersServices.addSkip(username, postId);
 
     // return
     const nextQuestion = await QuestionsServices.getQuestion(-1);

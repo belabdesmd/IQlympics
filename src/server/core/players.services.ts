@@ -55,7 +55,7 @@ export class PlayersServices {
     }
   }
 
-  static async addSkip(postId: string, username: string): Promise<void> {
+  static async addSkip(username: string, postId: string): Promise<void> {
     await redis.zIncrBy(keys.skips(postId), username, 1);
   }
 
@@ -74,7 +74,7 @@ export class PlayersServices {
   }
 
   static async setQuestion(username: string, postId: string, questionId: number): Promise<void> {
-    await redis.set(keys.question(postId, username), questionId.toString())
+    await redis.set(keys.question(postId, username), questionId.toString());
   }
 
   static async getQuestionId(username: string, postId: string): Promise<number> {
