@@ -23,8 +23,18 @@
       }
     ]
   },
+  "forms": {
+    "createPostForm": "/internal/form/create-post"
+  },
   "triggers": {
     "onPostDelete": "/internal/trigger/post-delete"
+  },
+  "scheduler": {
+    "tasks": {
+      "post-best-captions": {
+        "endpoint": "/internal/job/next-round"
+      }
+    }
   },
   "settings": {
     "global": {
@@ -37,10 +47,7 @@
   },
   "permissions": {
     "http": {
-      "domains": [
-        "iqlympics.belfodil.me",
-        "flagcdn.com"
-      ],
+      "domains": [],
       "enable": true
     },
     "redis": true,

@@ -1,5 +1,5 @@
-import { RedisClient } from '@devvit/redis';
 import { Player } from "../../shared/types";
+import { redis } from "@devvit/web/server";
 
 // Redis key builders
 const keys = {
@@ -11,7 +11,7 @@ const keys = {
 
 export class PlayersServices {
 
-  static async getPlayer(redis: RedisClient, username: string): Promise<Player | null> {
+  static async getPlayer(username: string): Promise<Player | null> {
     try {
       const playerKey = keys.player(username);
       const playerData = await redis.hGetAll(playerKey);
@@ -34,7 +34,7 @@ export class PlayersServices {
     }
   }
 
-  static async createPlayer(redis: RedisClient, username: string, countryCode: string): Promise<Player> {
+  static async createPlayer(username: string, countryCode: string): Promise<Player> {
     try {
       const playerKey = `players:${username}`;
 
@@ -55,46 +55,30 @@ export class PlayersServices {
     }
   }
 
-  static async addSkip(redis: RedisClient, postId: string, username: string): Promise<void> {
+  static async addSkip(postId: string, username: string): Promise<void> {
     await redis.zIncrBy(keys.skips(postId), username, 1);
   }
 
-  static async getSkips(redis: RedisClient, username: string, postId: string): Promise<number> {
+  static async getRemainingSkips(username: string, postId: string): Promise<number> {
     const skipsUsed = (await redis.zScore(keys.skips(postId), username)) || 0;
     return Math.max(0, 3 - skipsUsed); // Return remaining skips (3 total - used)
   }
 
-  static async addWrong(redis: RedisClient, postId: string, username: string): Promise<void> {
+  static async addWrong(postId: string, username: string): Promise<boolean> {
     await redis.zIncrBy(keys.wrongs(postId), username, 1);
+    return await this.isGameOver(username, postId);
   }
 
-  static async getWrongs(redis: RedisClient, username: string, postId: string): Promise<number> {
-    return (await redis.zScore(keys.wrongs(postId), username)) || 0;
+  static async isGameOver(username: string, postId: string): Promise<boolean> {
+    return (await redis.zScore(keys.wrongs(postId), username) || 0) >= 5;
   }
 
-  static async setQuestion(redis: RedisClient, username: string, postId: string, questionId: number): Promise<void> {
+  static async setQuestion(username: string, postId: string, questionId: number): Promise<void> {
     await redis.set(keys.question(postId, username), questionId.toString())
   }
 
-  static async incrementWrongAnswers(redis: RedisClient, username: string, postId: string): Promise<{
-    wrongAnswers: number;
-    gameOver: boolean;
-  }> {
-    try {
-      await this.addWrong(redis, postId, username);
-      const wrongAnswers = await this.getWrongs(redis, username, postId);
-      const gameOver = wrongAnswers >= 5;
-
-      return {
-        wrongAnswers,
-        gameOver
-      };
-    } catch (error) {
-      console.error(`Error incrementing wrong answers for ${username}:`, error);
-      throw new Error(
-        `Failed to increment wrong answers: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
-    }
+  static async getQuestionId(username: string, postId: string): Promise<number> {
+    return parseInt(await redis.get(keys.question(postId, username)) || "-1");
   }
 
 }

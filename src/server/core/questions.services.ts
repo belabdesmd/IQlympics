@@ -1,16 +1,18 @@
 import { Question } from "../../shared/types";
-import { RedisClient } from "@devvit/redis";
-import { settings } from '@devvit/web/server';
+import { reddit, redis, settings } from '@devvit/web/server';
+import { PlayersServices } from "./players.services";
+import { SettingsServices } from "./settings.services";
 
 // Redis key builders
 const keys = {
   questions: () => `questions`,
-  questionIndex: () => `questionIndex`
+  questionIndex: () => `questionIndex`,
+  points: (countryCode: string) => `points:${countryCode}`,
 } as const;
 
 export class QuestionsServices {
 
-  static async fetchQuestionsRemotely(nextId: number): Promise<Question[]> {
+  private static async fetchQuestionsRemotely(nextId: number): Promise<Question[]> {
     // Get API key from settings
     let apiKey;
     try {
@@ -25,6 +27,9 @@ export class QuestionsServices {
     }
 
     // Make API call to generate caption image
+    const subreddit = await reddit.getCurrentSubreddit();
+    const theme = await SettingsServices.getTheme(subreddit.name);
+    const about = theme ? `about ${theme} ` : "";
     const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
       method: 'POST',
       headers: {
@@ -34,7 +39,7 @@ export class QuestionsServices {
       body: JSON.stringify({
         contents: [{
           parts: [
-            {text: `Generate 10 trivia questions with 4 options and include the index of the correct option for each question (indexes start from 0). The id should be auto-generated starting from ${nextId}`}
+            {text: `Generate 10 trivia questions ${about}with 4 options and include the index of the correct option for each question (indexes start from 0). The id should be auto-generated starting from ${nextId}`}
           ]
         }],
         generationConfig: {
@@ -62,7 +67,7 @@ export class QuestionsServices {
     return JSON.parse(JSON.parse(await response.text()).candidates[0].content.parts[0].text) as Question[];
   }
 
-  static async getQuestion(redis: RedisClient, questionId?: number): Promise<Question | undefined> {
+  static async getQuestion(questionId: number): Promise<Question | undefined> {
     // get questions remaining
     const count = await redis.hLen(keys.questions());
 
@@ -79,18 +84,68 @@ export class QuestionsServices {
     }
 
     // get random question
-    if (questionId) {
+    if (questionId !== -1) {
       const questionData = await redis.hGet(keys.questions(), questionId.toString());
       return questionData ? JSON.parse(questionData) : undefined;
     } else {
       const ids = await redis.hKeys(keys.questions());
       const randomId = ids[Math.floor(Math.random() * ids.length)]!;
-      return JSON.parse((await redis.hGet(keys.questions(), randomId))!);
+      const questionData = await redis.hGet(keys.questions(), randomId);
+      return questionData ? JSON.parse(questionData) : undefined;
     }
   }
 
-  static async removeQuestion(redis: RedisClient, questionId: number): Promise<void> {
+  static async removeQuestion(questionId: number): Promise<void> {
     await redis.hDel(keys.questions(), [questionId.toString()]);
+  }
+
+  static async answerQuestion(username: string, postId: string, correct: boolean, questionId: number): Promise<Question | null | undefined> {
+    try {
+      const player = await PlayersServices.getPlayer(username);
+      if (!player) {
+        throw new Error(`Player ${username} does not exist`);
+      }
+
+      const pointsKey = keys.points(player.countryCode);
+      const currentPlayerPoints = await redis.zScore(pointsKey, username) || 0;
+      const currentCountryPoints = await redis.zScore("points", player.countryCode) || 0;
+
+      if (correct) {
+        // TODO: add answer as comment?
+
+        // Add a point for correct answer
+        await redis.zIncrBy(pointsKey, username, 1);
+        await redis.zAdd("points", {
+          member: player.countryCode,
+          score: currentCountryPoints + 1
+        });
+
+        // remove question
+        await QuestionsServices.removeQuestion(questionId);
+
+        return QuestionsServices.getQuestion(-1); // return question
+      } else {
+        // Handle wrong answer
+        const gameOver = await PlayersServices.addWrong(username, postId);
+
+        // Subtract a point only if player has points to lose
+        if (currentPlayerPoints > 0) {
+          await redis.zIncrBy(pointsKey, username, -1);
+          await redis.zAdd("points", {
+            member: player.countryCode,
+            score: Math.max(0, currentCountryPoints - 1)
+          });
+        }
+
+        // Return either question (next gameplay) or null if gameover
+        return !gameOver ? QuestionsServices.getQuestion(-1) : null;
+      }
+    } catch (error) {
+      console.error(`Error processing answer for ${username}:`, error);
+      throw new Error(
+        `Failed to process answer: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
+    }
   }
 
 }

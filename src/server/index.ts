@@ -1,11 +1,11 @@
 import express from 'express';
-import { context, createServer, getServerPort, reddit, redis } from '@devvit/web/server';
+import { context, createServer, getServerPort, reddit } from '@devvit/web/server';
 import { UiResponse } from '@devvit/web/shared';
 import { Response } from 'express';
 import { PlayersServices } from "./core/players.services";
 import { QuestionsServices } from "./core/questions.services";
-import { PointsServices } from "./core/points.services";
 import { LeaderboardServices } from "./core/leaderboard.services";
+import { SettingsServices } from "./core/settings.services";
 
 const app = express();
 
@@ -22,16 +22,35 @@ const router = express.Router();
 
 // Menu: Create Post Form Init from Menu Click
 router.post('/internal/menu/create-post', async (_req, res: Response<UiResponse>) => {
-
   try {
-    // Submit post to Reddit
-    const subreddit = await reddit.getCurrentSubreddit();
-    const post = await reddit.submitCustomPost({
-      title: "Play IQlympics", //TODO: set proper post title
-      subredditName: subreddit.name
+    res.json({
+      showForm: {
+        name: 'createPostForm',
+        form: {
+          title: 'Setup IQlympics Games Settings',
+          description: 'Be one of IQlympics Game Organizers',
+          cancelLabel: "Cancel",
+          acceptLabel: "Start Now!",
+          fields: [
+            {
+              name: 'hours',
+              label: 'Hours',
+              helpText: 'How many hours before the next Gameplay',
+              type: 'number',
+              required: true,
+              defaultValue: 24,
+            },
+            {
+              name: 'theme',
+              label: 'Game Theme',
+              helpText: 'What is the theme of the game?',
+              type: 'string',
+              required: false,
+            }
+          ],
+        }
+      },
     });
-
-    res.json({navigateTo: post.url});
   } catch (error) {
     console.error('Error creating post:', error);
     res.json({
@@ -40,19 +59,57 @@ router.post('/internal/menu/create-post', async (_req, res: Response<UiResponse>
   }
 });
 
+// Form: Create Post Form
+router.post('/internal/form/create-post', async (req, res: Response<UiResponse>) => {
+  try {
+    const {hours, theme} = req.body;
+    const subreddit = await reddit.getCurrentSubreddit();
+
+    // save subreddit theme
+    await SettingsServices.setTheme(subreddit.id, theme);
+
+    // reset subreddit details
+    await SettingsServices.reset(subreddit.id);
+
+    // create post
+    const postId = await SettingsServices.createPost(subreddit.name);
+
+    // schedule next post
+    const jobId = await SettingsServices.scheduleNextPost(hours, postId)!;
+
+    // save logs
+    await SettingsServices.setLogs(subreddit.name, postId, jobId);
+
+  } catch (error) {
+    console.error('Error creating post:', error);
+    res.json({
+      showToast: `Error creating post: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    });
+  }
+});
+
+// Job: Schedule Next Round
+router.post('/internal/job/next-round', async (req, _res) => {
+  const {hours, postId} = req.body.data;
+  const subreddit = await reddit.getCurrentSubreddit();
+
+  // delete post
+  await SettingsServices.deletePost(postId);
+
+  // create post
+  const newPostId = await SettingsServices.createPost(subreddit.name);
+
+  // schedule next post
+  const jobId = await SettingsServices.scheduleNextPost(hours, newPostId)!;
+
+  // save logs
+  await SettingsServices.setLogs(subreddit.name, postId, jobId);
+});
 
 // Trigger: On Post Delete
-router.post('/internal/trigger/post-delete', async (req, _res) => {
+router.post('/internal/trigger/post-delete', async (_req, _res) => {
   try {
-    const postId = req.body.postId;
-    if (!postId) {
-      console.error('No post ID found in PostDelete event');
-      return;
-    }
-
-    // TODO: purge post details
-
-    console.log(`Successfully processed deletion of post ${postId}`);
+    await SettingsServices.reset((await reddit.getCurrentSubreddit()).id);
   } catch (error) {
     console.error('Error in postDelete trigger:', error);
   }
@@ -66,45 +123,36 @@ router.get('/api/player', async (_req, res): Promise<void> => {
     // get username
     const username = await reddit.getCurrentUsername();
     if (!username) {
-      res.status(404).json({
-        status: 'error',
-        message: 'Username not found',
-      });
+      res.status(403).json({status: 'error', message: 'Username not found',});
       return;
     }
 
     // get player
-    const player = await PlayersServices.getPlayer(redis, username);
+    const player = await PlayersServices.getPlayer(username);
 
     // return
     if (!player) res.status(404).send("No such player");
     else res.json({status: 'success', data: player});
   } catch (error) {
     console.error('Error getting username:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to get username',
-    });
+    res.status(500).json({status: 'error', message: 'Failed to get username',});
   }
 });
 
 // Create Player
 router.post('/api/player/create', async (req, res): Promise<void> => {
   try {
-    const data = req.body;
+    const {countryCode} = req.body;
 
     // username
     const username = await reddit.getCurrentUsername();
     if (!username) {
-      res.status(404).json({
-        status: 'error',
-        message: 'Username not found',
-      });
+      res.status(403).json({status: 'error', message: 'Username not found',});
       return;
     }
 
     // create player
-    const player = await PlayersServices.createPlayer(redis, username, data.countryCode);
+    const player = await PlayersServices.createPlayer(username, countryCode);
 
     // return
     res.json({status: 'success', data: player});
@@ -117,40 +165,47 @@ router.post('/api/player/create', async (req, res): Promise<void> => {
   }
 });
 
-// Get Question
-router.get('/api/gameplay/question', async (_req, res): Promise<void> => {
+// Get Game Status
+router.get('/api/gameplay/status', async (_req, res): Promise<void> => {
   try {
     // get username
     const username = await reddit.getCurrentUsername();
     if (!username) {
-      res.status(404).json({
-        status: 'error',
-        message: 'Username not found',
-      });
+      res.status(403).json({status: 'error', message: 'Username not found',});
       return;
     }
 
     // get postId
     const {postId} = context;
     if (!postId) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Post is deleted',
-      });
+      res.status(400).json({status: 'error', message: 'Post is deleted',});
       return;
     }
 
-    const question = await QuestionsServices.getQuestion(redis);
-    if (!question) res.json({status: 'failure'}); // TODO: handle failure
+    // calculate
+    const isGameover = await PlayersServices.isGameOver(username, postId);
+
+    // return
+    if (isGameover) res.json({status: 'success', data: {gameover: true}});
     else {
-      await PlayersServices.setQuestion(redis, username, postId, question.id);
-      res.json({status: 'success', data: question});
+      const skipsRemaining = await PlayersServices.getRemainingSkips(username, postId);
+      const currentQuestionId = await PlayersServices.getQuestionId(username, postId);
+
+      // get question
+      const question = await QuestionsServices.getQuestion(currentQuestionId);
+      if (question) res.json({
+        status: 'success',
+        data: {gameover: false, skips: skipsRemaining, question: question}
+      });
+      else res.status(404).json({status: 'error', message: 'Error generating Question'});
     }
+
+    // return
   } catch (error) {
-    console.error('Error getting question:', error);
+    console.error('Error getting game status:', error);
     res.status(500).json({
       status: 'error',
-      message: 'Failed to get question',
+      message: 'Failed to get game status',
     });
   }
 });
@@ -163,28 +218,30 @@ router.post('/api/gameplay/answer', async (req, res): Promise<void> => {
     // get username
     const username = await reddit.getCurrentUsername();
     if (!username) {
-      res.status(404).json({
-        status: 'error',
-        message: 'Username not found',
-      });
+      res.status(403).json({status: 'error', message: 'Username not found',});
       return;
     }
 
     // get postId
     const {postId} = context;
     if (!postId) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Post is deleted',
-      });
+      res.status(400).json({status: 'error', message: 'Post is deleted',});
       return;
     }
 
     // answer question
-    const canContinue = await PointsServices.answerQuestion(redis, username, postId, isCorrect, questionId);
+    const nextQuestion = await QuestionsServices.answerQuestion(username, postId, isCorrect, questionId);
 
     // return
-    res.json({status: 'success', data: canContinue});
+    if (nextQuestion === null) res.json({status: 'success', data: {gameover: true}});
+    else if (nextQuestion === undefined) res.status(404).json({
+      status: 'error',
+      message: 'Error generating Question'
+    });
+    else {
+      await PlayersServices.setQuestion(username, postId, nextQuestion.id);
+      res.json({status: 'success', data: {gameover: false, nextQuestion: nextQuestion}});
+    }
   } catch (error) {
     console.error('Error processing answer:', error);
     res.status(500).json({
@@ -200,89 +257,37 @@ router.get('/api/gameplay/skip', async (_req, res): Promise<void> => {
     // get username
     const username = await reddit.getCurrentUsername();
     if (!username) {
-      res.status(404).json({
-        status: 'error',
-        message: 'Username not found',
-      });
+      res.status(403).json({status: 'error', message: 'Username not found',});
       return;
     }
 
     // get postId
     const {postId} = context;
     if (!postId) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Post is deleted',
-      });
+      res.status(400).json({status: 'error', message: 'Post is deleted',});
       return;
     }
 
     // get skips
-    const currentSkips = await PlayersServices.getSkips(redis, username, postId);
-
-    // Check if player has skips remaining (starts with 3, decreases with each skip)
-    if (currentSkips <= 0) {
-      res.status(400).json({
-        status: 'error',
-        message: 'No skips remaining',
-      });
-      return;
-    }
+    const remainingSkips = await PlayersServices.getRemainingSkips(username, postId);
 
     // Add skip (this increments the skip count)
-    await PlayersServices.addSkip(redis, postId, username);
+    await PlayersServices.addSkip(postId, username);
 
     // return
-    const question = await QuestionsServices.getQuestion(redis);
-    if (!question) res.json({status: 'failure'}); // TODO: handle failure
-    else {
-      await PlayersServices.setQuestion(redis, username, postId, question.id);
-      res.json({status: 'success', data: question});
-    }
+    const nextQuestion = await QuestionsServices.getQuestion(-1);
+    if (nextQuestion) {
+      await PlayersServices.setQuestion(username, postId, nextQuestion.id);
+      res.json({
+        status: 'success',
+        data: {remainingSkips: remainingSkips, nextQuestion: nextQuestion}
+      });
+    } else res.status(404).json({status: 'error', message: 'Error generating Question'});
   } catch (error) {
     console.error('Error processing skip:', error);
     res.status(500).json({
       status: 'error',
       message: 'Failed to process skip',
-    });
-  }
-});
-
-// Get Game Status
-router.get('/api/status', async (_req, res): Promise<void> => {
-  try {
-    // get username
-    const username = await reddit.getCurrentUsername();
-    if (!username) {
-      res.status(404).json({
-        status: 'error',
-        message: 'Username not found',
-      });
-      return;
-    }
-
-    // get postId
-    const {postId} = context;
-    if (!postId) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Post is deleted',
-      });
-      return;
-    }
-
-    // calculate
-    const skipsRemaining = await PlayersServices.getSkips(redis, username, postId);
-    const wrongAnswers = await PlayersServices.getWrongs(redis, username, postId);
-    const isGameOver = wrongAnswers >= 5;
-
-    // return
-    res.json({status: 'success', data: {username, skips: skipsRemaining, gameover: isGameOver}});
-  } catch (error) {
-    console.error('Error getting game status:', error);
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to get game status',
     });
   }
 });
@@ -293,7 +298,7 @@ router.get('/api/leaderboard', async (_req, res): Promise<void> => {
     // get username
     const username = await reddit.getCurrentUsername();
     if (!username) {
-      res.status(404).json({
+      res.status(403).json({
         status: 'error',
         message: 'Username not found',
       });
@@ -301,7 +306,7 @@ router.get('/api/leaderboard', async (_req, res): Promise<void> => {
     }
 
     // return
-    res.json({status: 'success', data: await LeaderboardServices.getLeaderboard(redis, username)});
+    res.json({status: 'success', data: await LeaderboardServices.getLeaderboard(username)});
   } catch (error) {
     console.error('Error getting leaderboard:', error);
     res.status(500).json({
