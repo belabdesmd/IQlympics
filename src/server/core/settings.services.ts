@@ -13,16 +13,9 @@ export class SettingsServices {
     await redis.set(keys.logs(subredditId), JSON.stringify({postId: postId, jobId: jobId}));
   }
 
-  static async reset(subredditId: string) {
+  static async getLogs(subredditId: string) {
     const logsData = await redis.get(keys.logs(subredditId));
-    if (logsData) {
-      const logs: { postId: string, jobId: string } = JSON.parse(logsData);
-      // delete post
-      await this.deletePost(logs.postId);
-
-      // cancel job
-      await this.cancelJob(logs.jobId);
-    }
+    return logsData ? JSON.parse(logsData) as {postId: string, jobId: string} : undefined;
   }
 
   static async setTheme(subredditId: string, theme: string): Promise<void> {
@@ -64,7 +57,7 @@ export class SettingsServices {
 
   static async deletePost(postId: string) {
     const post = await reddit.getPostById(T3(postId));
-    await post.remove();
+    if(!post.isRemoved()) await post.remove();
   }
 
   static async cancelJob(jobId: string) {

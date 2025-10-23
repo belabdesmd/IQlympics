@@ -66,10 +66,14 @@ router.post('/internal/form/create-post', async (req, res: Response<UiResponse>)
     const subreddit = await reddit.getCurrentSubreddit();
 
     // save subreddit theme
-    await SettingsServices.setTheme(subreddit.id, theme);
+    if ((theme?.length ?? 0) > 0) await SettingsServices.setTheme(subreddit.id, theme);
 
     // reset subreddit details
-    await SettingsServices.reset(subreddit.id);
+    const logs = await SettingsServices.getLogs(subreddit.id);
+    if (logs) {
+      await SettingsServices.deletePost(logs.postId);
+      await SettingsServices.cancelJob(logs.jobId);
+    }
 
     // create post
     const postId = await SettingsServices.createPost(subreddit.name);
@@ -115,8 +119,9 @@ router.post('/internal/trigger/post-delete', async (req, _res) => {
       return;
     }
 
-    await SettingsServices.reset((await reddit.getCurrentSubreddit()).id);
-    await PlayersServices.purgePostRelated(postId)
+    const logs = await SettingsServices.getLogs((await reddit.getCurrentSubreddit()).id);
+    if (logs) await SettingsServices.cancelJob(logs.jobId); // post already deleted, just cancel jobId
+    await PlayersServices.purgePostRelated(postId);
   } catch (error) {
     console.error('Error in postDelete trigger:', error);
   }

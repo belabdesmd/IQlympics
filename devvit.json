@@ -31,7 +31,7 @@
   },
   "scheduler": {
     "tasks": {
-      "post-best-captions": {
+      "iqlympics-next-round": {
         "endpoint": "/internal/job/next-round"
       }
     }
