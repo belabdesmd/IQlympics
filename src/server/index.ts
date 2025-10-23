@@ -107,9 +107,16 @@ router.post('/internal/job/next-round', async (req, _res) => {
 });
 
 // Trigger: On Post Delete
-router.post('/internal/trigger/post-delete', async (_req, _res) => {
+router.post('/internal/trigger/post-delete', async (req, _res) => {
   try {
+    const postId = req.body.postId;
+    if (!postId) {
+      console.error('No post ID found in PostDelete event');
+      return;
+    }
+
     await SettingsServices.reset((await reddit.getCurrentSubreddit()).id);
+    await PlayersServices.purgePostRelated(postId)
   } catch (error) {
     console.error('Error in postDelete trigger:', error);
   }

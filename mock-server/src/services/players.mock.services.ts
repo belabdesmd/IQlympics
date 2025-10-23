@@ -6,7 +6,7 @@ const keys = {
   player: (username: string) => `players:${username}`,
   skips: (postId: string) => `post:${postId}:skips`,
   wrongs: (postId: string) => `post:${postId}:wrongs`,
-  question: (postId: string, username: string) => `post:${postId}:question:${username}`,
+  question: (postId: string) => `post:${postId}:question`,
 } as const;
 
 export class PlayersMockServices {
@@ -74,11 +74,11 @@ export class PlayersMockServices {
   }
 
   static async setQuestion(username: string, postId: string, questionId: number): Promise<void> {
-    await redis.set(keys.question(postId, username), questionId.toString())
+    await redis.hSet(keys.question(postId), {[username]: questionId.toString()});
   }
 
   static async getQuestionId(username: string, postId: string): Promise<number> {
-    return parseInt(await redis.get(keys.question(postId, username)) || "-1");
+    return parseInt((await redis.hGet(keys.question(postId), username)) || "-1");
   }
 
 }
