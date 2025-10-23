@@ -64,7 +64,7 @@ export class PlayersMockServices {
     return Math.max(0, 3 - skipsUsed); // Return remaining skips (3 total - used)
   }
 
-  static async addWrong(postId: string, username: string): Promise<boolean> {
+  static async addWrong(username: string, postId: string): Promise<boolean> {
     await redis.zIncrBy(keys.wrongs(postId), 1, username);
     return await this.isGameOver(username, postId);
   }
