@@ -16,7 +16,6 @@ import {
 /**
  * API Client service for handling all HTTP requests to the backend
  * Provides methods for player management, gameplay, and leaderboard operations
- * TODO: update endpoints (use only /api/**)
  */
 export class APIClient {
   private readonly baseUrl: string;
@@ -104,7 +103,7 @@ export class APIClient {
    * Check if a player exists for the current user
    */
   async getPlayer(): Promise<ApiResponse<Player>> {
-    return this.fetchWithErrorHandling<Player>('http://localhost:3000/api/player', {}, isPlayer);
+    return this.fetchWithErrorHandling<Player>('/api/player', {}, isPlayer);
   }
 
   /**
@@ -115,7 +114,7 @@ export class APIClient {
       return ApiErrorHandler.createErrorResponse('Country code is required');
     }
 
-    return this.fetchWithErrorHandling<Player>('http://localhost:3000/api/player/create', {
+    return this.fetchWithErrorHandling<Player>('/api/player/create', {
       method: 'POST',
       body: JSON.stringify({countryCode})
     }, isPlayer);
@@ -125,14 +124,14 @@ export class APIClient {
    * Get the current game status including question and game state
    */
   async getGameStatus(): Promise<ApiResponse<GameStatus>> {
-    return this.fetchWithErrorHandling<GameStatus>('http://localhost:3000/api/gameplay/status', {}, isGameStatus);
+    return this.fetchWithErrorHandling<GameStatus>('/api/gameplay/status', {}, isGameStatus);
   }
 
   /**
    * Submit an answer for the current question
    */
   async submitAnswer(isCorrect: boolean, questionId: number): Promise<ApiResponse<Answer>> {
-    return this.fetchWithErrorHandling<Answer>('http://localhost:3000/api/gameplay/answer', {
+    return this.fetchWithErrorHandling<Answer>('/api/gameplay/answer', {
       method: 'POST',
       body: JSON.stringify({questionId, isCorrect})
     }, isAnswer);
@@ -142,14 +141,14 @@ export class APIClient {
    * Skip the current question and get the next one
    */
   async skipQuestion(): Promise<ApiResponse<Skip>> {
-    return this.fetchWithErrorHandling<Skip>('http://localhost:3000/api/gameplay/skip', {}, isSkip);
+    return this.fetchWithErrorHandling<Skip>('/api/gameplay/skip', {}, isSkip);
   }
 
   /**
    * Get the current leaderboard data
    */
   async getLeaderboard(): Promise<ApiResponse<Leaderboard>> {
-    return this.fetchWithErrorHandling<Leaderboard>('http://localhost:3000/api/leaderboard', {}, isLeaderboard);
+    return this.fetchWithErrorHandling<Leaderboard>('/api/leaderboard', {}, isLeaderboard);
   }
 }
 

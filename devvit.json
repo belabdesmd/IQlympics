@@ -47,7 +47,7 @@
   },
   "permissions": {
     "http": {
-      "domains": [],
+      "domains": ["cdn.jsdelivr.net"],
       "enable": true
     },
     "redis": true,
