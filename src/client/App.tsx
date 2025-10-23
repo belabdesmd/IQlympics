@@ -9,7 +9,6 @@ type AppView = 'loading' | 'createPlayer' | 'gameplay' | 'leaderboard' | 'gameOv
 interface AppState {
   currentView: AppView;
   player: Player | null;
-  gameStatus: GameStatus | null;
   error: string | null;
   isLoading: boolean;
 }
@@ -18,59 +17,47 @@ export const App: React.FC = () => {
   const [state, setState] = useState<AppState>({
     currentView: 'loading',
     player: null,
-    gameStatus: null,
     error: null,
     isLoading: true
   });
 
-  // Initial player check and routing logic
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        setState(prev => ({ ...prev, isLoading: true, error: null }));
+  // Run the initialization logic
+  const initializeApp = async () => {
+    try {
+      setState(prev => ({...prev, isLoading: true, error: null}));
 
-        // Check if player exists (Requirement 1.1)
-        const playerResponse = await apiClient.getPlayer();
-        
-        if (playerResponse.status === 'success' && playerResponse.data) {
-          // Player exists, check game status (Requirement 2.1, 2.2)
-          const gameStatusResponse = await apiClient.getGameStatus();
-          
-          if (gameStatusResponse.status === 'success' && gameStatusResponse.data) {
-            setState(prev => ({
-              ...prev,
-              player: playerResponse.data!,
-              gameStatus: gameStatusResponse.data!,
-              currentView: gameStatusResponse.data!.gameover ? 'gameOver' : 'gameplay',
-              isLoading: false
-            }));
-          } else {
-            setState(prev => ({
-              ...prev,
-              error: gameStatusResponse.error || 'Failed to load game status',
-              currentView: 'error',
-              isLoading: false
-            }));
-          }
-        } else {
-          // No player exists, show create player screen
-          setState(prev => ({
-            ...prev,
-            currentView: 'createPlayer',
-            isLoading: false
-          }));
-        }
-      } catch (err) {
-        const error = err as Error;
+      // Check if player exists (Requirement 1.1)
+      const playerResponse = await apiClient.getPlayer();
+
+      if (playerResponse.status === 'success' && playerResponse.data) {
+        // Player exists, go to Gameplay
         setState(prev => ({
           ...prev,
-          error: error instanceof Error ? error.message : 'Failed to initialize app',
-          currentView: 'error',
+          player: playerResponse.data!,
+          currentView: 'gameplay',
+          isLoading: false
+        }));
+      } else {
+        // No player exists, show create player screen
+        setState(prev => ({
+          ...prev,
+          currentView: 'createPlayer',
           isLoading: false
         }));
       }
-    };
+    } catch (err) {
+      const error = err as Error;
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : 'Failed to initialize app',
+        currentView: 'error',
+        isLoading: false
+      }));
+    }
+  };
 
+  // Initial player check and routing logic - runs only once
+  useEffect(() => {
     initializeApp();
   }, []);
 
@@ -96,7 +83,7 @@ export const App: React.FC = () => {
   const navigateBackToGameplay = () => {
     setState(prev => ({
       ...prev,
-      currentView: prev.gameStatus?.gameover ? 'gameOver' : 'gameplay',
+      currentView: 'gameplay',
       error: null
     }));
   };
@@ -116,111 +103,68 @@ export const App: React.FC = () => {
     }));
   };
 
-  const retryInitialization = () => {
+  const retryInitialization = React.useCallback(() => {
     setState(prev => ({
       ...prev,
       currentView: 'loading',
       error: null,
       isLoading: true
     }));
-    
-    // Re-run initialization
-    const initializeApp = async () => {
-      try {
-        const playerResponse = await apiClient.getPlayer();
-        
-        if (playerResponse.status === 'success' && playerResponse.data) {
-          const gameStatusResponse = await apiClient.getGameStatus();
-          
-          if (gameStatusResponse.status === 'success' && gameStatusResponse.data) {
-            setState(prev => ({
-              ...prev,
-              player: playerResponse.data!,
-              gameStatus: gameStatusResponse.data!,
-              currentView: gameStatusResponse.data!.gameover ? 'gameOver' : 'gameplay',
-              isLoading: false
-            }));
-          } else {
-            setState(prev => ({
-              ...prev,
-              error: gameStatusResponse.error || 'Failed to load game status',
-              currentView: 'error',
-              isLoading: false
-            }));
-          }
-        } else {
-          setState(prev => ({
-            ...prev,
-            currentView: 'createPlayer',
-            isLoading: false
-          }));
-        }
-      } catch (err) {
-        const error = err as Error;
-        setState(prev => ({
-          ...prev,
-          error: error instanceof Error ? error.message : 'Failed to initialize app',
-          currentView: 'error',
-          isLoading: false
-        }));
-      }
-    };
 
     initializeApp();
-  };
+  }, []);
 
   // Render current view based on app state
   const renderCurrentView = () => {
     switch (state.currentView) {
       case 'loading':
-        return <Loading />;
-      
+        return <Loading/>;
+
       case 'createPlayer':
         return (
-          <CreatePlayer 
+          <CreatePlayer
             onPlayerCreated={navigateToGameplay}
             onError={handleError}
           />
         );
-      
+
       case 'gameplay':
         return (
-          <Gameplay 
+          <Gameplay
             player={state.player!}
-            gameStatus={state.gameStatus!}
             onNavigateToLeaderboard={navigateToLeaderboard}
             onGameOver={handleGameOver}
             onError={handleError}
           />
         );
-      
+
       case 'leaderboard':
         return (
-          <Leaderboard 
+          <Leaderboard
             player={state.player!}
             onNavigateBack={navigateBackToGameplay}
             onError={handleError}
           />
         );
-      
+
       case 'gameOver':
         return (
-          <GameOver 
+          <GameOver
             onNavigateToLeaderboard={navigateToLeaderboard}
             onNavigateToGameplay={navigateBackToGameplay}
           />
         );
-      
+
       case 'error':
         return (
-          <Error 
+          <Error
             message={state.error || 'An unexpected error occurred'}
             onRetry={retryInitialization}
           />
         );
-      
+
       default:
-        return <Loading />;
+        return <Loading/>;
     }
   };
 

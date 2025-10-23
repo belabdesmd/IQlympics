@@ -35,6 +35,7 @@ export class APIClient {
     options: RequestInit = {},
     dataValidator?: (data: any) => data is T
   ): Promise<ApiResponse<T>> {
+    console.log(endpoint);
     const url = `${this.baseUrl}${endpoint}`;
 
     if (this.enableLogging) {

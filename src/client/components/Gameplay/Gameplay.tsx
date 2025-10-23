@@ -7,7 +7,6 @@ import { MdSkipNext, MdLeaderboard } from 'react-icons/md';
 
 interface GameplayProps {
   player: Player;
-  gameStatus: GameStatus;
   onNavigateToLeaderboard: () => void;
   onGameOver: () => void;
   onError: (error: string) => void;
@@ -24,13 +23,12 @@ interface GameplayState {
 }
 
 const Gameplay: React.FC<GameplayProps> = ({
-                                             gameStatus,
                                              onNavigateToLeaderboard,
                                              onGameOver,
                                              onError
                                            }) => {
   const [state, setState] = useState<GameplayState>({
-    gameStatus: gameStatus,
+    gameStatus: null,
     currentQuestion: null,
     isLoading: true,
     error: null,
