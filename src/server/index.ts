@@ -323,6 +323,20 @@ router.get('/api/leaderboard', async (_req, res): Promise<void> => {
   }
 });
 
+// Get top 3 countries
+router.get('/api/splash', async (_req, res): Promise<void> => {
+  try {
+    // return
+    res.json({status: 'success', data: await LeaderboardServices.getTop3Countries()});
+  } catch (error) {
+    console.error('Error getting leaderboard:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to get leaderboard',
+    });
+  }
+});
+
 // Use router middleware
 app.use(router);
 

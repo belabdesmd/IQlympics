@@ -70,4 +70,23 @@ export class LeaderboardServices {
     }
   }
 
+  static async getTop3Countries() {
+    // Get top 3 countries from global points leaderboard
+    const allCountriesData = await redis.zRange('points', 0, -1);
+    const countriesWithScores = await Promise.all(
+      allCountriesData.map(async (item: any) => {
+        const countryCode = typeof item === 'string' ? item : item.member;
+        return {
+          countryCode,
+          points: await redis.zScore('points', countryCode) || 0
+        };
+      })
+    );
+
+    // Sort by points descending and take top 3
+    return countriesWithScores
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 3);
+  }
+
 }
