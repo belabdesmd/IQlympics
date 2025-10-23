@@ -22,7 +22,7 @@ export class APIClient {
   private readonly baseUrl: string;
   private readonly enableLogging: boolean;
 
-  constructor(baseUrl: string = '', enableLogging: boolean = true) {
+  constructor(baseUrl: string = '', enableLogging: boolean = false) {
     this.baseUrl = baseUrl;
     this.enableLogging = enableLogging;
   }
@@ -141,9 +141,7 @@ export class APIClient {
    * Skip the current question and get the next one
    */
   async skipQuestion(): Promise<ApiResponse<Skip>> {
-    return this.fetchWithErrorHandling<Skip>('http://localhost:3000/api/gameplay/skip', {
-      method: 'POST'
-    }, isSkip);
+    return this.fetchWithErrorHandling<Skip>('http://localhost:3000/api/gameplay/skip', {}, isSkip);
   }
 
   /**

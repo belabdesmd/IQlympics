@@ -28,10 +28,10 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
   // Fetch leaderboard data
   const fetchLeaderboard = async () => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       const response = await apiClient.getLeaderboard();
-      
+
       if (response.status === 'success' && response.data) {
         setState(prev => ({
           ...prev,
@@ -100,7 +100,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
               {leaderboard.topCountries.map((country, index) => {
                 const countryData = findCountryByCode(country.countryCode);
                 const positionClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
-                
+
                 return (
                   <div key={country.countryCode} className="leaderboard-item">
                     <div className={`leaderboard-position ${positionClass}`}>
@@ -154,8 +154,8 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
             </div>
             <div className="contribution-progress">
               <div className="progress-bar">
-                <div 
-                  className="progress-fill" 
+                <div
+                  className="progress-fill"
                   style={{ width: `${Math.min(leaderboard.contribution, 100)}%` }}
                 />
               </div>

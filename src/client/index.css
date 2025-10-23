@@ -1205,8 +1205,23 @@ body {
 
 .answer-button.answer-selected::before,
 .answer-button.answer-correct::before,
-.answer-button.answer-incorrect::before {
+.answer-button.answer-incorrect::before,
+.answer-button.loading::before {
   display: none;
+}
+
+.answer-button.loading {
+  background: #0AA4FC;
+  color: white;
+  cursor: wait;
+}
+
+.answer-button.loading .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  margin-right: 8px;
 }
 
 /* Staggered animation for answer options */
@@ -1428,7 +1443,7 @@ body {
 
 .game-over-icon {
   font-size: 64px;
-  color: #0AA4FC;
+  color: #ef4444;
 }
 
 .game-over-title {
@@ -1528,7 +1543,8 @@ body {
 .leaderboard-separator {
   height: 2px;
   background: #e5e7eb;
-  margin: 4px 0;
+  flex-shrink: 0;
+  width: 100%;
 }
 
 .leaderboard-section {

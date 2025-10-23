@@ -9,7 +9,7 @@ IQlympics transforms traditional trivia into a patriotic team sport where player
 - **Represent Their Nation**: Choose from 195+ countries with authentic flag displays and comprehensive search functionality
 - **Answer Trivia Questions**: Tackle multiple-choice questions across various knowledge topics with immediate visual feedback
 - **Build Country Rankings**: Every correct answer adds points to your nation's total score on the global leaderboard
-- **Strategic Skip System**: Use up to 5 limited skips to avoid difficult questions strategically
+- **Strategic Skip System**: Use limited skips (starts with 3) to avoid difficult questions strategically
 - **Track Your Impact**: View your personal contribution percentage to your country's success
 - **Compete Globally**: Watch real-time leaderboard updates as countries battle for supremacy
 
@@ -24,7 +24,7 @@ Unlike traditional solo trivia games, IQlympics transforms individual knowledge 
 The real-time country ranking system provides both macro and micro feedback - see how your nation ranks globally while tracking your personal contribution percentage to your country's total score. This dual-layer system makes every player feel their knowledge matters on both personal and national levels.
 
 ### ⚡ **Strategic Skip System**
-The limited skip system creates meaningful decision-making moments. Players must strategically choose when to risk answering a difficult question versus using a precious skip, adding genuine tension and resource management to trivia gameplay.
+The limited skip system (starts with 3 skips per game) creates meaningful decision-making moments. Players must strategically choose when to risk answering a difficult question versus using a precious skip, adding genuine tension and resource management to trivia gameplay. With only 5 wrong answers allowed before elimination, each skip becomes a valuable lifeline.
 
 ### 🎮 **Native Reddit Integration**
 Built specifically for Reddit using Devvit technology, IQlympics appears seamlessly within Reddit posts. Players can compete while staying in their familiar Reddit environment, with automatic user authentication and post-based deployment.
@@ -33,7 +33,10 @@ Built specifically for Reddit using Devvit technology, IQlympics appears seamles
 Designed specifically for Reddit's mobile-heavy user base, featuring touch-optimized interfaces, comprehensive country flag integration (195+ countries), and responsive card-based layout that adapts perfectly to any screen size.
 
 ### 🎯 **Gamified Patriotism**
-IQlympics channels competitive nationalism in a positive, knowledge-based way. Players experience genuine pride when contributing to their country's success, creating emotional investment that goes beyond typical gaming satisfaction.
+IQlympics channels competitive nationalism in a positive, knowledge-based way. Players experience genuine pride when contributing to their country's success, creating emotional investment that goes beyond typical gaming satisfaction. The personal contribution percentage system shows exactly how much each player impacts their nation's standing.
+
+### 🎮 **Elimination-Based Tension**
+Unlike endless trivia games, IQlympics creates genuine stakes with its 5-wrong-answer elimination system. Every question becomes a high-stakes decision: risk an answer that could end your game, or use one of your precious 3 skips. This creates an escalating tension curve that keeps players engaged throughout their session.
 
 ## How to Play IQlympics
 
@@ -62,7 +65,8 @@ IQlympics channels competitive nationalism in a positive, knowledge-based way. P
    - **Question Display**: Questions appear in a clean, centered format with large, readable text optimized for mobile
    - **Touch-Friendly Interface**: Answer options are displayed as large, vertically-stacked buttons with proper spacing for mobile interaction
    - **Immediate Visual Feedback**: 
-     - Selected answers highlight in blue with a subtle pulse animation before submission
+     - Selected answers highlight in blue with a subtle pulse animation and loading spinner during submission
+     - Loading state shows spinner animation while processing your answer
      - Correct answers turn green with a success pulse and glow effect
      - Incorrect answers turn red with a shake animation
      - Feedback displays for 2 seconds before automatically advancing to the next question
@@ -71,12 +75,12 @@ IQlympics channels competitive nationalism in a positive, knowledge-based way. P
    - **Game Over Condition**: Players are eliminated after 5 incorrect answers, creating tension and strategic decision-making
 
 4. **Strategic Skip System**
-   - **Limited Resource**: Exactly 5 skips available per game session - use them wisely!
-   - **Skip Counter**: Real-time display in the top-left header shows remaining skips (e.g., "4" remaining)
+   - **Limited Resource**: Start with 3 skips available per game session - use them wisely!
+   - **Skip Counter**: Real-time display in the top-left header shows remaining skips (e.g., "3" remaining)
    - **Skip Button**: Accessible skip button (⏭️) with counter in the compact gameplay header
    - **Strategic Decision**: Choose wisely when to skip difficult questions vs. risk an incorrect answer that counts toward elimination
    - **No Score Penalty**: Skipping doesn't affect your score or count as a wrong answer
-   - **Disabled When Exhausted**: Skip button becomes disabled and grayed out when all 5 skips are used
+   - **Disabled When Exhausted**: Skip button becomes disabled and grayed out when all skips are used
    - **Instant Next Question**: Skipping immediately loads the next question without delay
 
 5. **Game Navigation & Controls**
@@ -101,8 +105,8 @@ IQlympics channels competitive nationalism in a positive, knowledge-based way. P
    - **Elimination Screen**: Professional game over screen when you've made 5 incorrect answers
    - **Clear Messaging**: Explains that you've reached the limit and can't continue in this session
    - **Leaderboard Access**: Direct access to view final standings and your country's performance
-   - **Replay Information**: Clear indication that you can play again later in the same post
-   - **Trophy Icon**: Celebratory trophy icon to maintain positive experience even after elimination
+   - **Replay Information**: Clear indication that you can play again in another post
+   - **Cancel Icon**: Clear game over icon to indicate the session has ended
 
 ### 🎮 **Complete Game Flow**
 
@@ -177,9 +181,9 @@ IQlympics channels competitive nationalism in a positive, knowledge-based way. P
 
 **Core Gameplay Mechanics**:
 - ✅ **Question Display**: Clean, centered format with four multiple-choice options in mobile-optimized vertical layout
-- ✅ **Answer Feedback**: Blue selection highlighting, green for correct (with pulse), red for incorrect (with shake) animations
-- ✅ **Skip System**: Strategic resource management with exactly 5 skips and real-time counter (⏭️ button with remaining count)
-- ✅ **Elimination System**: Game over after 5 incorrect answers with professional elimination screen and trophy icon
+- ✅ **Answer Feedback**: Blue selection highlighting with loading spinner, green for correct (with pulse), red for incorrect (with shake) animations
+- ✅ **Skip System**: Strategic resource management with 3 starting skips and real-time counter (⏭️ button with remaining count)
+- ✅ **Elimination System**: Game over after 5 incorrect answers with professional elimination screen and cancel icon
 - ✅ **Score Tracking**: Individual contributions to country totals with animated percentage calculations
 - ✅ **Leaderboard**: Top 5 countries display with authentic flags, full country names, and point totals
 - ✅ **Compact Navigation**: Clean header design with gameplay (📊 leaderboard icon) and leaderboard (← back button) controls

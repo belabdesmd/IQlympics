@@ -123,6 +123,7 @@ app.post('/api/gameplay/answer', async (req: Request, res: Response): Promise<vo
 // Skip Question
 app.get('/api/gameplay/skip', async (_req: Request, res: Response): Promise<void> => {
   try {
+    console.log("SKIPPING")
     // get skips
     const remainingSkips = await PlayersMockServices.getRemainingSkips("doualrkos", "postId");
 
@@ -139,6 +140,7 @@ app.get('/api/gameplay/skip', async (_req: Request, res: Response): Promise<void
       });
     } else res.status(404).json({status: 'error', message: 'Error generating Question'});
   } catch (error) {
+    console.log("ERROR CAUGHT?")
     console.error('Error processing skip:', error);
     res.status(500).json({
       status: 'error',

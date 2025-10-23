@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from './shared/Card';
 import { Button } from './shared/Button';
-import { MdLeaderboard, MdEmojiEvents } from 'react-icons/md';
+import { MdLeaderboard, MdCancel } from 'react-icons/md';
 
 interface GameOverProps {
   onNavigateToLeaderboard: () => void;
@@ -16,7 +16,7 @@ export const GameOver: React.FC<GameOverProps> = ({
       <div className="game-over">
         <div className="game-over-content">
           <div className="game-over-icon">
-            <MdEmojiEvents aria-label="Trophy" />
+            <MdCancel aria-label="Game Over" />
           </div>
           
           <h2 className="game-over-title">

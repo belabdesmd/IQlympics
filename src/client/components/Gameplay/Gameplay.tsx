@@ -159,7 +159,7 @@ const Gameplay: React.FC<GameplayProps> = ({
           isSubmitting: false,
           gameStatus: prev.gameStatus ? {
             ...prev.gameStatus,
-            skips: (prev.gameStatus.skips || 0) - 1,
+            skips: data.remainingSkips,
           } : null,
         }));
       } else {
@@ -210,11 +210,11 @@ const Gameplay: React.FC<GameplayProps> = ({
       <div className="gameplay-header">
         <button
           onClick={handleSkip}
-          disabled={isSubmitting || (stateGameStatus?.skips || 3) <= 0}
+          disabled={isSubmitting || (stateGameStatus?.skips ?? 3) <= 0}
           className="gameplay-icon-button"
         >
           <MdSkipNext/>
-          <span className="skip-count">{stateGameStatus?.skips || 3}</span>
+          <span className="skip-count">{stateGameStatus?.skips ?? 3}</span>
         </button>
         <button
           onClick={onNavigateToLeaderboard}
@@ -237,13 +237,19 @@ const Gameplay: React.FC<GameplayProps> = ({
           <div className="answer-options">
             {currentQuestion.options.map((option, index) => {
               let buttonClass = 'answer-button';
+              const isSelected = selectedAnswer === index;
+              const isLoading = isSelected && isSubmitting && !showFeedback;
 
-              if (showFeedback && selectedAnswer === index) {
+              if (showFeedback && isSelected) {
                 // Show feedback colors based on correctness
                 const isCorrect = currentQuestion.correctIndex === index;
                 buttonClass += isCorrect ? ' answer-correct' : ' answer-incorrect';
-              } else if (selectedAnswer === index && !showFeedback) {
+              } else if (isSelected && !showFeedback) {
                 buttonClass += ' answer-selected';
+              }
+
+              if (isLoading) {
+                buttonClass += ' loading';
               }
 
               return (
@@ -253,7 +259,14 @@ const Gameplay: React.FC<GameplayProps> = ({
                   onClick={() => handleAnswerSelect(index)}
                   disabled={showFeedback || isSubmitting}
                 >
-                  {option}
+                  {isLoading ? (
+                    <>
+                      <div className="spinner"></div>
+                      {option}
+                    </>
+                  ) : (
+                    option
+                  )}
                 </button>
               );
             })}
