@@ -1,61 +1,232 @@
-import { navigateTo } from '@devvit/web/client';
-import { useCounter } from './hooks/useCounter';
+import React, { useState, useEffect } from 'react';
+import { Loading, Error, CreatePlayer, Gameplay, Leaderboard, GameOver } from './components';
+import { apiClient } from './services/api';
+import type { Player, GameStatus } from '../shared/types';
 
-export const App = () => {
-  const { count, username, loading, increment, decrement } = useCounter();
+// App state type definition
+type AppView = 'loading' | 'createPlayer' | 'gameplay' | 'leaderboard' | 'gameOver' | 'error';
+
+interface AppState {
+  currentView: AppView;
+  player: Player | null;
+  gameStatus: GameStatus | null;
+  error: string | null;
+  isLoading: boolean;
+}
+
+export const App: React.FC = () => {
+  const [state, setState] = useState<AppState>({
+    currentView: 'loading',
+    player: null,
+    gameStatus: null,
+    error: null,
+    isLoading: true
+  });
+
+  // Initial player check and routing logic
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        setState(prev => ({ ...prev, isLoading: true, error: null }));
+
+        // Check if player exists (Requirement 1.1)
+        const playerResponse = await apiClient.getPlayer();
+        
+        if (playerResponse.status === 'success' && playerResponse.data) {
+          // Player exists, check game status (Requirement 2.1, 2.2)
+          const gameStatusResponse = await apiClient.getGameStatus();
+          
+          if (gameStatusResponse.status === 'success' && gameStatusResponse.data) {
+            setState(prev => ({
+              ...prev,
+              player: playerResponse.data!,
+              gameStatus: gameStatusResponse.data!,
+              currentView: gameStatusResponse.data!.gameover ? 'gameOver' : 'gameplay',
+              isLoading: false
+            }));
+          } else {
+            setState(prev => ({
+              ...prev,
+              error: gameStatusResponse.error || 'Failed to load game status',
+              currentView: 'error',
+              isLoading: false
+            }));
+          }
+        } else {
+          // No player exists, show create player screen
+          setState(prev => ({
+            ...prev,
+            currentView: 'createPlayer',
+            isLoading: false
+          }));
+        }
+      } catch (err) {
+        const error = err as Error;
+        setState(prev => ({
+          ...prev,
+          error: error instanceof Error ? error.message : 'Failed to initialize app',
+          currentView: 'error',
+          isLoading: false
+        }));
+      }
+    };
+
+    initializeApp();
+  }, []);
+
+  // Navigation functions
+  const navigateToGameplay = (player: Player, gameStatus: GameStatus) => {
+    setState(prev => ({
+      ...prev,
+      player,
+      gameStatus,
+      currentView: gameStatus.gameover ? 'gameOver' : 'gameplay',
+      error: null
+    }));
+  };
+
+  const navigateToLeaderboard = () => {
+    setState(prev => ({
+      ...prev,
+      currentView: 'leaderboard',
+      error: null
+    }));
+  };
+
+  const navigateBackToGameplay = () => {
+    setState(prev => ({
+      ...prev,
+      currentView: prev.gameStatus?.gameover ? 'gameOver' : 'gameplay',
+      error: null
+    }));
+  };
+
+  const handleGameOver = () => {
+    setState(prev => ({
+      ...prev,
+      currentView: 'gameOver'
+    }));
+  };
+
+  const handleError = (error: string) => {
+    setState(prev => ({
+      ...prev,
+      error,
+      currentView: 'error'
+    }));
+  };
+
+  const retryInitialization = () => {
+    setState(prev => ({
+      ...prev,
+      currentView: 'loading',
+      error: null,
+      isLoading: true
+    }));
+    
+    // Re-run initialization
+    const initializeApp = async () => {
+      try {
+        const playerResponse = await apiClient.getPlayer();
+        
+        if (playerResponse.status === 'success' && playerResponse.data) {
+          const gameStatusResponse = await apiClient.getGameStatus();
+          
+          if (gameStatusResponse.status === 'success' && gameStatusResponse.data) {
+            setState(prev => ({
+              ...prev,
+              player: playerResponse.data!,
+              gameStatus: gameStatusResponse.data!,
+              currentView: gameStatusResponse.data!.gameover ? 'gameOver' : 'gameplay',
+              isLoading: false
+            }));
+          } else {
+            setState(prev => ({
+              ...prev,
+              error: gameStatusResponse.error || 'Failed to load game status',
+              currentView: 'error',
+              isLoading: false
+            }));
+          }
+        } else {
+          setState(prev => ({
+            ...prev,
+            currentView: 'createPlayer',
+            isLoading: false
+          }));
+        }
+      } catch (err) {
+        const error = err as Error;
+        setState(prev => ({
+          ...prev,
+          error: error instanceof Error ? error.message : 'Failed to initialize app',
+          currentView: 'error',
+          isLoading: false
+        }));
+      }
+    };
+
+    initializeApp();
+  };
+
+  // Render current view based on app state
+  const renderCurrentView = () => {
+    switch (state.currentView) {
+      case 'loading':
+        return <Loading />;
+      
+      case 'createPlayer':
+        return (
+          <CreatePlayer 
+            onPlayerCreated={navigateToGameplay}
+            onError={handleError}
+          />
+        );
+      
+      case 'gameplay':
+        return (
+          <Gameplay 
+            player={state.player!}
+            gameStatus={state.gameStatus!}
+            onNavigateToLeaderboard={navigateToLeaderboard}
+            onGameOver={handleGameOver}
+            onError={handleError}
+          />
+        );
+      
+      case 'leaderboard':
+        return (
+          <Leaderboard 
+            player={state.player!}
+            onNavigateBack={navigateBackToGameplay}
+            onError={handleError}
+          />
+        );
+      
+      case 'gameOver':
+        return (
+          <GameOver 
+            onNavigateToLeaderboard={navigateToLeaderboard}
+            onNavigateToGameplay={navigateBackToGameplay}
+          />
+        );
+      
+      case 'error':
+        return (
+          <Error 
+            message={state.error || 'An unexpected error occurred'}
+            onRetry={retryInitialization}
+          />
+        );
+      
+      default:
+        return <Loading />;
+    }
+  };
+
   return (
-    <div className="flex relative flex-col justify-center items-center min-h-screen gap-4">
-      <img className="object-contain w-1/2 max-w-[250px] mx-auto" src="/snoo.png" alt="Snoo" />
-      <div className="flex flex-col items-center gap-2">
-        <h1 className="text-2xl font-bold text-center text-gray-900 ">
-          {username ? `Hey ${username} 👋` : ''}
-        </h1>
-        <p className="text-base text-center text-gray-600 ">
-          Edit <span className="bg-[#e5ebee]  px-1 py-0.5 rounded">src/client/App.tsx</span> to get
-          started.
-        </p>
-      </div>
-      <div className="flex items-center justify-center mt-5">
-        <button
-          className="flex items-center justify-center bg-[#d93900] text-white w-14 h-14 text-[2.5em] rounded-full cursor-pointer font-mono leading-none transition-colors"
-          onClick={decrement}
-          disabled={loading}
-        >
-          -
-        </button>
-        <span className="text-[1.8em] font-medium mx-5 min-w-[50px] text-center leading-none text-gray-900">
-          {loading ? '...' : count}
-        </span>
-        <button
-          className="flex items-center justify-center bg-[#d93900] text-white w-14 h-14 text-[2.5em] rounded-full cursor-pointer font-mono leading-none transition-colors"
-          onClick={increment}
-          disabled={loading}
-        >
-          +
-        </button>
-      </div>
-      <footer className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 text-[0.8em] text-gray-600">
-        <button
-          className="cursor-pointer"
-          onClick={() => navigateTo('https://developers.reddit.com/docs')}
-        >
-          Docs
-        </button>
-        <span className="text-gray-300">|</span>
-        <button
-          className="cursor-pointer"
-          onClick={() => navigateTo('https://www.reddit.com/r/Devvit')}
-        >
-          r/Devvit
-        </button>
-        <span className="text-gray-300">|</span>
-        <button
-          className="cursor-pointer"
-          onClick={() => navigateTo('https://discord.com/invite/R7yu2wh9Qz')}
-        >
-          Discord
-        </button>
-      </footer>
+    <div className="app-container">
+      {renderCurrentView()}
     </div>
   );
 };

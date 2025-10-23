@@ -1,3 +1,9 @@
+// Import types for use in API responses
+import type { Player } from './player.type';
+import type { Answer, Question, Skip } from './question.type';
+import type { GameStatus } from './status.type';
+import type { Leaderboard } from './leaderboard.type';
+
 // API Response wrapper types for consistent error handling
 export interface ApiResponse<T> {
   status: "success" | "failure";
@@ -16,10 +22,5 @@ export interface PlayerResponse extends ApiResponse<Player> {}
 export interface QuestionResponse extends ApiResponse<Question> {}
 export interface GameStatusResponse extends ApiResponse<GameStatus> {}
 export interface LeaderboardResponse extends ApiResponse<Leaderboard> {}
-export interface AnswerResponse extends ApiResponse<boolean> {}
-
-// Import types for use in API responses
-import type { Player } from './player.type';
-import type { Question } from './question.type';
-import type { GameStatus } from './status.type';
-import type { Leaderboard } from './leaderboard.type';
+export interface AnswerResponse extends ApiResponse<Answer> {}
+export interface SkipResponse extends ApiResponse<Skip> {}

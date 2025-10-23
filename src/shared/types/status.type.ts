@@ -1,5 +1,7 @@
+import { Question } from "./question.type";
+
 export interface GameStatus {
-  username: string;
-  skips: number;        // Number of skips already used
   gameover: boolean;
+  skips?: number | undefined;        // Number of skips remaining
+  question?: Question | undefined;
 }
