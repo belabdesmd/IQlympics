@@ -20,6 +20,7 @@ interface GameplayState {
   selectedAnswer: number | null;
   showFeedback: boolean;
   isSubmitting: boolean;
+  streak: number;
 }
 
 const Gameplay: React.FC<GameplayProps> = ({
@@ -35,6 +36,7 @@ const Gameplay: React.FC<GameplayProps> = ({
     selectedAnswer: null,
     showFeedback: false,
     isSubmitting: false,
+    streak: 0,
   });
 
   // Fetch initial game status and current question
@@ -104,8 +106,11 @@ const Gameplay: React.FC<GameplayProps> = ({
       if (response.status === 'success' && response.data) {
         const data = response.data;
 
+        // Update streak based on correctness
+        const newStreak = isCorrect ? state.streak + 1 : 0;
+
         // Show feedback for 2 seconds
-        setState(prev => ({...prev, showFeedback: true, isSubmitting: false}));
+        setState(prev => ({...prev, showFeedback: true, isSubmitting: false, streak: newStreak}));
 
         setTimeout(() => {
           if (data.gameover) {
@@ -270,6 +275,13 @@ const Gameplay: React.FC<GameplayProps> = ({
             })}
           </div>
         </div>
+      </div>
+
+      {/* Streak Counter */}
+      <div className="streak-container">
+        <span className="streak-text">
+          🔥 {state.streak}
+        </span>
       </div>
     </>
   );

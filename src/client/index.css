@@ -2501,3 +2501,46 @@ svg[aria-hidden="true"] {
     font-size: 14px;
   }
 }
+/* Streak counter styles */
+.streak-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.streak-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.streak-text:hover {
+  transform: translateY(-1px);
+}
+
+/* Responsive design for streak */
+@media (max-width: 768px) {
+  .streak-text {
+    font-size: 20px;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .streak-container {
+    margin-top: 12px;
+  }
+  
+  .streak-text {
+    font-size: 18px;
+    gap: 4px;
+  }
+}

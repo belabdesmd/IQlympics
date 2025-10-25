@@ -15,7 +15,7 @@ interface SplashState {
   error: string | null;
 }
 
-const Splash: React.FC<SplashProps> = ({onJoinCompetition}) => {
+const Splash: React.FC<SplashProps> = ({ onJoinCompetition }) => {
   const [state, setState] = useState<SplashState>({
     topCountries: null,
     isLoading: true,
@@ -24,7 +24,7 @@ const Splash: React.FC<SplashProps> = ({onJoinCompetition}) => {
 
   // Fetch top 3 countries
   const fetchTop3Countries = async () => {
-    setState(prev => ({...prev, isLoading: true, error: null}));
+    setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
       const response = await apiClient.getTop3();
@@ -62,23 +62,23 @@ const Splash: React.FC<SplashProps> = ({onJoinCompetition}) => {
   };
 
   if (state.isLoading) {
-    return <Loading message="Loading competition..."/>;
+    return <Loading message="Loading competition..." />;
   }
 
   if (state.error) {
-    return <Error message={state.error} onRetry={handleRetry}/>;
+    return <Error message={state.error} onRetry={handleRetry} />;
   }
 
   if (!state.topCountries || state.topCountries.length === 0) {
-    return <Error message="No competition data available" onRetry={handleRetry}/>;
+    return <Error message="No competition data available" onRetry={handleRetry} />;
   }
 
-  const {topCountries} = state;
+  const { topCountries } = state;
 
   // Ensure we have at least 3 countries, pad with empty if needed
   const paddedCountries = [...topCountries];
   while (paddedCountries.length < 3) {
-    paddedCountries.push({countryCode: '', points: 0});
+    paddedCountries.push({ countryCode: '', points: 0 });
   }
 
   // Arrange for podium: [1st, 2nd, 3rd] -> [2nd, 1st, 3rd]
@@ -103,7 +103,7 @@ const Splash: React.FC<SplashProps> = ({onJoinCompetition}) => {
 
               return (
                 <div key={index}
-                     className={`podium-item ${isFirst ? 'first' : isSecond ? 'second' : 'third'}`}>
+                  className={`podium-item ${isFirst ? 'first' : isSecond ? 'second' : 'third'}`}>
                   {country!.countryCode ? (
                     <>
                       {/* Medal */}
