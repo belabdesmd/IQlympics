@@ -19,7 +19,7 @@ export class SettingsServices {
   }
 
   static async setTheme(subredditId: string, theme: string): Promise<void> {
-    redis.set(keys.subreddits(subredditId), theme);
+    await redis.set(keys.subreddits(subredditId), theme);
   }
 
   static async getTheme(subredditId: string): Promise<string | undefined> {

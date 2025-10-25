@@ -77,7 +77,7 @@ app.get('/api/gameplay/status', async (_req: Request, res: Response): Promise<vo
       const currentQuestionId = await PlayersMockServices.getQuestionId("doularkos", "postId");
 
       // get question
-      const question = await QuestionsMockServices.getQuestion(currentQuestionId);
+      const question = await QuestionsMockServices.getQuestion("iqlympics", currentQuestionId);
       if (question) res.json({
         status: 'success',
         data: {gameover: false, skips: skipsRemaining, question: question}
@@ -99,7 +99,7 @@ app.post('/api/gameplay/answer', async (req: Request, res: Response): Promise<vo
     const {questionId, isCorrect} = req.body;
 
     // answer question
-    const nextQuestion = await QuestionsMockServices.answerQuestion("doularkos", "postId", isCorrect, questionId);
+    const nextQuestion = await QuestionsMockServices.answerQuestion("iqlympics", "doularkos", "postId", isCorrect, questionId);
 
     // return
     if (nextQuestion === null) res.json({status: 'success', data: {gameover: true}});
@@ -131,7 +131,7 @@ app.get('/api/gameplay/skip', async (_req: Request, res: Response): Promise<void
     await PlayersMockServices.addSkip("doularkos", "postId");
 
     // return
-    const nextQuestion = await QuestionsMockServices.getQuestion(-1);
+    const nextQuestion = await QuestionsMockServices.getQuestion("iqlympics", -1);
     if (nextQuestion) {
       await PlayersMockServices.setQuestion("doularkos", "postId", nextQuestion.id);
       res.json({

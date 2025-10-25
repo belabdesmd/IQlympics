@@ -5,8 +5,8 @@ import { SettingsServices } from "./settings.services";
 
 // Redis key builders
 const keys = {
-  questions: () => `questions`,
-  questionIndex: () => `questionIndex`,
+  questions: (subredditId: string) => `questions:${subredditId}`,
+  questionIndex: (subredditId: string) => `questionIndex:${subredditId}`,
   points: (countryCode: string) => `points:${countryCode}`,
 } as const;
 
@@ -67,39 +67,40 @@ export class QuestionsServices {
     return JSON.parse(JSON.parse(await response.text()).candidates[0].content.parts[0].text) as Question[];
   }
 
-  static async getQuestion(questionId: number): Promise<Question | undefined> {
+  static async getQuestion(subredditId: string, questionId: number): Promise<Question | undefined> {
     // get questions remaining
-    const count = await redis.hLen(keys.questions());
+    const count = await redis.hLen(keys.questions(subredditId));
 
     // refresh by adding more questions
     if (count < 10) {
-      const nextId = parseInt(await redis.get(keys.questionIndex()) ?? "0");
+      const nextId = parseInt(await redis.get(keys.questionIndex(subredditId)) ?? "0");
       const newQuestions = await this.fetchQuestionsRemotely(nextId);
+
       const fields: Record<string, string> = {};
       for (const question of newQuestions) {
         fields[String(question.id)] = JSON.stringify(question);
       }
-      await redis.hSet(keys.questions(), fields);
-      redis.set(keys.questionIndex(), (nextId + newQuestions.length).toString());
+      await redis.hSet(keys.questions(subredditId), fields);
+      await redis.set(keys.questionIndex(subredditId), (nextId + newQuestions.length).toString());
     }
 
     // get random question
     if (questionId !== -1) {
-      const questionData = await redis.hGet(keys.questions(), questionId.toString());
+      const questionData = await redis.hGet(keys.questions(subredditId), questionId.toString());
       return questionData ? JSON.parse(questionData) : undefined;
     } else {
-      const ids = await redis.hKeys(keys.questions());
+      const ids = await redis.hKeys(keys.questions(subredditId));
       const randomId = ids[Math.floor(Math.random() * ids.length)]!;
-      const questionData = await redis.hGet(keys.questions(), randomId);
+      const questionData = await redis.hGet(keys.questions(subredditId), randomId);
       return questionData ? JSON.parse(questionData) : undefined;
     }
   }
 
-  static async removeQuestion(questionId: number): Promise<void> {
-    await redis.hDel(keys.questions(), [questionId.toString()]);
+  static async removeQuestion(subredditId: string, questionId: number): Promise<void> {
+    await redis.hDel(keys.questions(subredditId), [questionId.toString()]);
   }
 
-  static async answerQuestion(username: string, postId: string, correct: boolean, questionId: number): Promise<Question | null | undefined> {
+  static async answerQuestion(subredditId: string, username: string, postId: string, correct: boolean, questionId: number): Promise<Question | null | undefined> {
     try {
       const player = await PlayersServices.getPlayer(username);
       if (!player) {
@@ -111,8 +112,6 @@ export class QuestionsServices {
       const currentCountryPoints = await redis.zScore("points", player.countryCode) || 0;
 
       if (correct) {
-        // TODO: add answer as comment?
-
         // Add a point for correct answer
         await redis.zIncrBy(pointsKey, username, 1);
         await redis.zAdd("points", {
@@ -121,9 +120,9 @@ export class QuestionsServices {
         });
 
         // remove question
-        await QuestionsServices.removeQuestion(questionId);
+        await QuestionsServices.removeQuestion(subredditId, questionId);
 
-        return QuestionsServices.getQuestion(-1); // return question
+        return QuestionsServices.getQuestion(subredditId, -1); // return question
       } else {
         // Handle wrong answer
         const gameOver = await PlayersServices.addWrong(username, postId);
@@ -138,7 +137,7 @@ export class QuestionsServices {
         }
 
         // Return either question (next gameplay) or null if gameover
-        return !gameOver ? QuestionsServices.getQuestion(-1) : null;
+        return !gameOver ? QuestionsServices.getQuestion(subredditId, -1) : null;
       }
     } catch (error) {
       console.error(`Error processing answer for ${username}:`, error);

@@ -23,6 +23,7 @@ const router = express.Router();
 // Menu: Create Post Form Init from Menu Click
 router.post('/internal/menu/create-post', async (_req, res: Response<UiResponse>) => {
   try {
+    const subredditId = (await reddit.getCurrentSubreddit()).id;
     res.json({
       showForm: {
         name: 'createPostForm',
@@ -45,6 +46,7 @@ router.post('/internal/menu/create-post', async (_req, res: Response<UiResponse>
               label: 'Game Theme',
               helpText: 'What is the theme of the game?',
               type: 'string',
+              defaultValue: await SettingsServices.getTheme(subredditId),
               required: false,
             }
           ],
@@ -180,6 +182,8 @@ router.post('/api/player/create', async (req, res): Promise<void> => {
 // Get Game Status
 router.get('/api/gameplay/status', async (_req, res): Promise<void> => {
   try {
+    const subredditId = (await reddit.getCurrentSubreddit()).id;
+
     // get username
     const username = await reddit.getCurrentUsername();
     if (!username) {
@@ -204,7 +208,7 @@ router.get('/api/gameplay/status', async (_req, res): Promise<void> => {
       const currentQuestionId = await PlayersServices.getQuestionId(username, postId);
 
       // get question
-      const question = await QuestionsServices.getQuestion(currentQuestionId);
+      const question = await QuestionsServices.getQuestion(subredditId, currentQuestionId);
       if (question) res.json({
         status: 'success',
         data: {gameover: false, skips: skipsRemaining, question: question}
@@ -225,6 +229,7 @@ router.get('/api/gameplay/status', async (_req, res): Promise<void> => {
 // Submit Answer
 router.post('/api/gameplay/answer', async (req, res): Promise<void> => {
   try {
+    const subredditId = (await reddit.getCurrentSubreddit()).id;
     const {questionId, isCorrect} = req.body;
 
     // get username
@@ -242,7 +247,7 @@ router.post('/api/gameplay/answer', async (req, res): Promise<void> => {
     }
 
     // answer question
-    const nextQuestion = await QuestionsServices.answerQuestion(username, postId, isCorrect, questionId);
+    const nextQuestion = await QuestionsServices.answerQuestion(subredditId, username, postId, isCorrect, questionId);
 
     // return
     if (nextQuestion === null) res.json({status: 'success', data: {gameover: true}});
@@ -266,6 +271,8 @@ router.post('/api/gameplay/answer', async (req, res): Promise<void> => {
 // Skip Question
 router.get('/api/gameplay/skip', async (_req, res): Promise<void> => {
   try {
+    const subredditId = (await reddit.getCurrentSubreddit()).id;
+
     // get username
     const username = await reddit.getCurrentUsername();
     if (!username) {
@@ -287,7 +294,7 @@ router.get('/api/gameplay/skip', async (_req, res): Promise<void> => {
     await PlayersServices.addSkip(username, postId);
 
     // return
-    const nextQuestion = await QuestionsServices.getQuestion(-1);
+    const nextQuestion = await QuestionsServices.getQuestion(subredditId, -1);
     if (nextQuestion) {
       await PlayersServices.setQuestion(username, postId, nextQuestion.id);
       res.json({
