@@ -1,128 +1,185 @@
-# IQlympics - Global Trivia Olympics
+# IQlympics - Country Quiz Challenge
 
-IQlympics is a competitive trivia game built for Reddit using the Devvit platform, where players represent their countries in a global knowledge competition. Every correct answer contributes points to your nation's leaderboard position, creating a unique blend of individual skill and national pride.
+IQlympics is a competitive geography and trivia game built for Reddit using the Devvit platform, where players represent their countries in a global knowledge competition. Every correct answer contributes points to your nation's leaderboard position, creating a unique blend of individual skill and national pride.
 
 ## What is IQlympics?
 
-IQlympics transforms traditional trivia into a patriotic team sport where players:
+IQlympics transforms traditional trivia into a patriotic team sport where players compete for their nation's glory. This Country Quiz Challenge features an engaging splash screen showcasing the current top 3 countries on a podium with medals, followed by intense trivia gameplay where every decision matters.
 
-- **Represent Their Nation**: Choose from 195+ countries with authentic flag displays and comprehensive search functionality
-- **Answer Trivia Questions**: Tackle multiple-choice questions across various knowledge topics with immediate visual feedback
-- **Build Country Rankings**: Every correct answer adds points to your nation's total score on the global leaderboard
-- **Strategic Skip System**: Use limited skips (starts with 3) to avoid difficult questions strategically
-- **Track Your Impact**: View your personal contribution percentage to your country's success
-- **Compete Globally**: Watch real-time leaderboard updates as countries battle for supremacy
+### Core Game Features
 
-The game creates a unique sense of national pride in trivia gaming, where individual knowledge directly contributes to collective national achievement on a global stage. Players face elimination after 5 incorrect answers, making each question a strategic decision between risking an answer or using a precious skip.
+- **🌍 Country Representation**: Choose from 195+ countries with authentic flag displays and comprehensive search functionality
+- **🧠 Multiple-Choice Trivia**: Answer challenging questions across various knowledge topics with immediate visual feedback
+- **🏆 National Scoring System**: Every correct answer adds points to your country's total score on the global leaderboard
+- **⚡ Strategic Skip System**: Use exactly 3 skips per game to avoid difficult questions strategically
+- **📊 Personal Impact Tracking**: View your exact contribution percentage to your country's success
+- **🔥 Live Global Competition**: Watch real-time leaderboard updates as countries battle for supremacy
+- **💀 High-Stakes Elimination**: Face elimination after 5 incorrect answers, making each question a critical decision
+
+The game creates genuine national pride in trivia gaming, where individual knowledge directly impacts collective national achievement. With limited skips and elimination pressure, every question becomes a strategic decision between risking an answer or preserving your precious resources.
 
 ## What Makes This Game Innovative?
 
 ### 🌍 **Collective National Competition**
-Unlike traditional solo trivia games, IQlympics transforms individual knowledge into national achievement. Every correct answer contributes points to your entire country's global ranking, creating a unique patriotic gaming experience where your knowledge directly impacts your nation's standing.
+Unlike traditional solo trivia games, IQlympics transforms individual knowledge into national achievement. Every correct answer contributes points to your entire country's global ranking, creating a unique patriotic gaming experience where your knowledge directly impacts your nation's standing on the world stage.
 
-### 🏆 **Dynamic Global Leaderboard System**
-The real-time country ranking system provides both macro and micro feedback - see how your nation ranks globally while tracking your personal contribution percentage to your country's total score. This dual-layer system makes every player feel their knowledge matters on both personal and national levels.
+### 🏆 **Dynamic Dual-Layer Leaderboard System**
+The sophisticated ranking system provides both macro and micro feedback:
+- **Global Rankings**: View the top 5 countries with their total points and authentic flag displays
+- **Personal Impact**: Track your exact contribution percentage to your country's success with animated progress visualization
+- **Real-time Updates**: Watch live leaderboard changes as players worldwide contribute to their nations
+- **Olympic-Style Podium**: Medal rankings (🥇🥈🥉) with proper positioning for visual impact
 
-### ⚡ **Strategic Skip System**
-The limited skip system (starts with 3 skips per game) creates meaningful decision-making moments. Players must strategically choose when to risk answering a difficult question versus using a precious skip, adding genuine tension and resource management to trivia gameplay. With only 5 wrong answers allowed before elimination, each skip becomes a valuable lifeline.
+### ⚡ **Strategic Resource Management**
+The precisely balanced skip system creates meaningful decision-making:
+- **Limited Skips**: Exactly 3 skips per game session - no more, no less
+- **High-Stakes Choices**: With only 5 wrong answers allowed before elimination, each skip becomes a precious lifeline
+- **Strategic Depth**: Players must carefully balance risk vs. reward on every question
+- **Visual Feedback**: Real-time skip counter in the gameplay header shows remaining resources
 
-### 🎮 **Native Reddit Integration**
-Built specifically for Reddit using Devvit technology, IQlympics appears seamlessly within Reddit posts. Players can compete while staying in their familiar Reddit environment, with automatic user authentication and post-based deployment.
+### 🎮 **Engaging Splash Screen with Live Competition Data**
+Dynamic first impression that showcases real competition:
+- **Live Top 3 Podium**: Real-time display of leading countries with authentic flags and current point totals
+- **Olympic-Style Presentation**: Medal podium with proper positioning (2nd, 1st, 3rd arrangement)
+- **Inspiring Call-to-Action**: Professional "🎮 Join Competition" button with motivational messaging
+- **Real-Time Data**: Fetches live leaderboard data to show actual current competition standings
+- **Smooth Transitions**: Seamless flow from splash screen to country selection or gameplay
 
-### 📱 **Mobile-First Design**
-Designed specifically for Reddit's mobile-heavy user base, featuring touch-optimized interfaces, comprehensive country flag integration (195+ countries), and responsive card-based layout that adapts perfectly to any screen size.
+### 📱 **Mobile-First Reddit Integration**
+Built specifically for Reddit using Devvit technology:
+- **Full React Application**: Complete trivia experience running in webview mode within Reddit posts
+- **Seamless Reddit Integration**: Automatic Reddit user authentication and data persistence
+- **Touch-Optimized Design**: Touch-friendly interface with minimum 44px button heights for mobile interaction
+- **Responsive Card Layout**: Adaptive design that works perfectly from mobile to desktop
+- **Professional Polish**: Smooth animations, loading states, and comprehensive error handling
 
-### 🎯 **Gamified Patriotism**
-IQlympics channels competitive nationalism in a positive, knowledge-based way. Players experience genuine pride when contributing to their country's success, creating emotional investment that goes beyond typical gaming satisfaction. The personal contribution percentage system shows exactly how much each player impacts their nation's standing.
+### 🎯 **Gamified National Pride System**
+IQlympics channels competitive nationalism positively:
+- **Meaningful Contribution**: Personal contribution percentage shows exactly how each player impacts their nation
+- **Collective Achievement**: Individual success directly translates to national glory
+- **Emotional Investment**: Players experience genuine pride when contributing to their country's leaderboard position
+- **Global Competition**: Real-time competition between all world nations creates ongoing engagement
 
-### 🎮 **Elimination-Based Tension**
-Unlike endless trivia games, IQlympics creates genuine stakes with its 5-wrong-answer elimination system. Every question becomes a high-stakes decision: risk an answer that could end your game, or use one of your precious 3 skips. This creates an escalating tension curve that keeps players engaged throughout their session.
+### 💀 **Elimination-Based Tension System**
+Unlike endless trivia games, IQlympics creates genuine stakes:
+- **5-Strike Elimination**: Game over after exactly 5 incorrect answers
+- **Escalating Pressure**: Each wrong answer increases tension and makes skips more valuable
+- **Strategic Decision Points**: Every question becomes a high-stakes choice between risk and resource preservation
+- **Professional Game Over**: Clean elimination screen with clear messaging and leaderboard access
 
 ## How to Play IQlympics
 
 ### 🚀 **Getting Started**
 
 1. **Launch the Game**
-   - Find an IQlympics post on Reddit
-   - Click the "Launch App" button to open the full-screen game experience
-   - The game automatically checks if you're a returning player or new player
+   - Find an IQlympics post on Reddit and click "Launch App" to open the game
+   - **Engaging Splash Screen**: Experience an impressive podium display featuring:
+     - 🥇🥈🥉 Medal podium with the current top 3 countries
+     - Live country flags and point totals from real leaderboard data
+     - Professional "🎮 Join Competition" button to enter the game
+     - Inspiring description: "Test your geography knowledge and compete with players worldwide!"
+   - **Smart Player Detection**: The game automatically detects if you're a returning player or need to create a new profile
+   - **Seamless Flow**: New players proceed to country selection, returning players go directly to gameplay
 
 2. **Choose Your Country** (New Players Only)
-   - **Browse 195+ Countries**: Scroll through a comprehensive list of countries with authentic flag displays
-   - **Smart Search**: Use the search bar to quickly find your country by name with real-time filtering
-   - **Visual Selection**: Each country displays with its flag image, full name, and radio button selector
-   - **Search Features**: 
-     - Real-time country count updates as you type (e.g., "195 countries" → "12 countries" when searching)
-     - Clear search button (✕) to reset your search instantly
-     - Responsive search with immediate filtering
-   - **Validation**: Form validation ensures you select a country before proceeding
-   - **Create Player**: Click "Create Player" to confirm your country selection and enter the game
+   - **Browse 195+ Countries**: Scroll through a comprehensive, searchable list of countries with authentic flag displays
+   - **Smart Search System**: Use the search bar with real-time filtering to quickly find your country
+     - Search icon (🔍) and clear button (✕) for easy navigation
+     - Live country count updates as you type (e.g., "195 countries" → "12 countries")
+     - Instant filtering with no delays or loading states
+   - **Visual Country Selection**: Each country displays with:
+     - Authentic flag image or emoji fallback
+     - Full country name in readable typography
+     - Radio button selector for clear selection indication
+     - Touch-friendly selection with hover effects and animations
+   - **Form Validation**: Built-in validation ensures you select a country before proceeding
+   - **Create Player**: Click "Create Player" to confirm your selection and enter the competition
 
-### 🎯 **Core Gameplay**
+### 🎯 **Core Gameplay Experience**
 
-3. **Answer Trivia Questions**
-   - **Multiple Choice Format**: Each question presents exactly four answer options
-   - **Question Display**: Questions appear in a clean, centered format with large, readable text optimized for mobile
-   - **Touch-Friendly Interface**: Answer options are displayed as large, vertically-stacked buttons with proper spacing for mobile interaction
-   - **Immediate Visual Feedback**: 
-     - Selected answers highlight in blue with a subtle pulse animation and loading spinner during submission
-     - Loading state shows spinner animation while processing your answer
-     - Correct answers turn green with a success pulse and glow effect
-     - Incorrect answers turn red with a shake animation
-     - Feedback displays for 2 seconds before automatically advancing to the next question
-   - **Question Topics**: Various knowledge categories covering general trivia
-   - **Automatic Progression**: After answering, the game automatically loads the next question or triggers game over
-   - **Game Over Condition**: Players are eliminated after 5 incorrect answers, creating tension and strategic decision-making
+3. **Answer Multiple-Choice Questions**
+   - **Question Format**: Each question presents exactly 4 answer options in a clean, vertical layout
+   - **Mobile-Optimized Display**: Large, readable text with proper spacing designed for touch interaction
+   - **Answer Selection Process**:
+     - Tap any answer option to select it
+     - Selected answer highlights in blue with a subtle pulse animation
+     - Loading spinner appears during answer submission
+     - Immediate visual feedback shows correctness
+   - **Visual Feedback System**:
+     - ✅ **Correct Answers**: Turn green with success pulse and glow effect
+     - ❌ **Incorrect Answers**: Turn red with shake animation
+     - ⏳ **Processing**: Blue highlight with loading spinner
+     - 🔄 **Auto-Advance**: 2-second feedback display before next question loads
+   - **Question Variety**: Diverse trivia topics covering general knowledge categories
+   - **Elimination Pressure**: Remember - 5 wrong answers ends your game session!
 
 4. **Strategic Skip System**
-   - **Limited Resource**: Start with 3 skips available per game session - use them wisely!
-   - **Skip Counter**: Real-time display in the top-left header shows remaining skips (e.g., "3" remaining)
-   - **Skip Button**: Accessible skip button (⏭️) with counter in the compact gameplay header
-   - **Strategic Decision**: Choose wisely when to skip difficult questions vs. risk an incorrect answer that counts toward elimination
-   - **No Score Penalty**: Skipping doesn't affect your score or count as a wrong answer
-   - **Disabled When Exhausted**: Skip button becomes disabled and grayed out when all skips are used
-   - **Instant Next Question**: Skipping immediately loads the next question without delay
+   - **Resource Management**: Start with exactly 3 skips per game - use them strategically!
+   - **Skip Interface**:
+     - Skip button (⏭️) with live counter in the compact header
+     - Real-time display shows remaining skips (e.g., "3", "2", "1", "0")
+     - Button becomes disabled and grayed out when exhausted
+   - **Strategic Decisions**:
+     - Skip difficult questions to preserve your 5-life limit
+     - Balance risk vs. reward on every question
+     - No score penalty for skipping (doesn't count as wrong answer)
+   - **Instant Results**: Skipping immediately loads the next question without delay
 
-5. **Game Navigation & Controls**
-   - **Compact Header Design**: Clean, minimal header with skip counter and leaderboard access positioned outside the main game card
-   - **Leaderboard Access**: Click the leaderboard icon (📊) in the top-right header anytime during gameplay
-   - **Seamless Transitions**: Navigate between gameplay and leaderboard without losing progress or game state
-   - **Game Over Detection**: Game automatically detects when you've made 5 incorrect answers and transitions to game over screen
-   - **Back Navigation**: Return from leaderboard to gameplay using the back arrow (←) button
-   - **Responsive Design**: Header and controls adapt perfectly to different screen sizes while maintaining usability
+5. **Navigation & Game Controls**
+   - **Compact Header Design**: Clean, minimal header positioned outside the main game card
+     - Left side: Skip button with counter (⏭️ 3)
+     - Right side: Leaderboard access button (📊)
+   - **Seamless Screen Transitions**:
+     - Access leaderboard anytime during gameplay without losing progress
+     - Return to gameplay using the back arrow (←) button
+     - Game state preserved across all navigation
+   - **Automatic Game Flow**:
+     - Game detects elimination after 5 wrong answers
+     - Automatic transition to professional game over screen
+     - Preserved leaderboard access from game over state
 
-### 🏆 **Leaderboard & Competition**
+### 🏆 **Leaderboard & Global Competition**
 
-6. **View Global Rankings**
-   - **Top 5 Countries**: See the highest-scoring nations with authentic country flags, full names, and total point scores
-   - **Your Country's Position**: Highlighted section with special styling showing your nation's current global ranking and total points
-   - **Personal Contribution**: View your exact percentage contribution to your country's total score with animated progress visualization
-   - **Animated Progress Bars**: Beautiful gradient progress bars with shimmer effects and smooth fill animations
-   - **Real-time Updates**: Leaderboard reflects the latest scores from all players globally
-   - **Visual Hierarchy**: Clear separation between top countries and your country's performance
+6. **View Live Global Rankings**
+   - **Top 5 Countries Display**:
+     - Authentic country flags with full country names
+     - Total point scores for each nation
+     - Animated ranking positions with smooth transitions
+     - Medal styling for top 3 positions (🥇🥈🥉)
+   - **Your Country's Performance**:
+     - Highlighted section with special blue styling
+     - Current global ranking position and total points
+     - Clear visual separation from other countries
+   - **Personal Impact Tracking**:
+     - Exact contribution percentage to your country's total score
+     - Animated progress bars with gradient fills
+     - Visual representation of your individual impact on national success
+   - **Real-time Updates**: Leaderboard reflects live scores from all global players
 
-7. **Game Over Experience**
-   - **Elimination Screen**: Professional game over screen when you've made 5 incorrect answers
-   - **Clear Messaging**: Explains that you've reached the limit and can't continue in this session
-   - **Leaderboard Access**: Direct access to view final standings and your country's performance
-   - **Replay Information**: Clear indication that you can play again in another post
-   - **Cancel Icon**: Clear game over icon to indicate the session has ended
+7. **Game Over & Session End**
+   - **Professional Elimination Screen**:
+     - Clear game over icon (🚫) and messaging
+     - Explanation of 5-wrong-answer elimination rule
+     - Information about playing again in another post
+   - **Final Actions**:
+     - Direct access to view final leaderboard standings
+     - See your country's final performance and your contribution
+     - Clean session termination with replay instructions
 
-### 🎮 **Complete Game Flow**
+### 🎮 **Complete Game Flow Summary**
 
-**Complete Gameplay Flow**:
-1. **App Launch** → 2. **Country Selection** (if new) → 3. **Answer Questions** → 4. **Strategic Skip Usage** → 5. **Leaderboard Viewing** → 6. **Game Over** (after 5 wrong answers) → 7. **Final Leaderboard**
+**Full Gameplay Sequence**:
+1. **Splash Screen** (podium with top 3 countries) → 2. **Country Selection** (new players) → 3. **Question Answering** → 4. **Strategic Skip Usage** → 5. **Leaderboard Viewing** → 6. **Elimination** (5 wrong answers) → 7. **Final Standings**
 
-**Key Technical Features**:
-- **Mobile-First Design**: Touch-optimized interface with proper button sizing (minimum 44px) designed specifically for Reddit's mobile-heavy user base
-- **Instant Visual Feedback**: Immediate responses to all player actions with smooth CSS animations and transitions
-- **Comprehensive Error Handling**: React error boundaries, API retry logic, and user-friendly error messages with retry options
-- **Professional Loading States**: Elegant loading indicators with spinners and progress animations during API calls
-- **Type-Safe Architecture**: Complete TypeScript implementation with strict type checking across all modules
-- **Responsive Card Layout**: Adaptive card-based design that works perfectly on all screen sizes from mobile to desktop
-- **Automatic State Management**: Game automatically saves progress, handles navigation, and restores state between screens
-- **Real-time Updates**: Live leaderboard updates and immediate answer feedback with smooth animations
-- **Compact Header Design**: Clean, minimal header positioned outside the main card for optimal space usage
+**Key Gameplay Features**:
+- **High-Stakes Decision Making**: Every question matters with elimination pressure
+- **Resource Management**: Strategic use of 3 precious skips
+- **National Pride**: Individual success directly contributes to country rankings
+- **Mobile-First Experience**: Touch-optimized interface designed for Reddit's mobile users
+- **Instant Feedback**: Immediate visual responses to all player actions
+- **Professional Polish**: Smooth animations, loading states, and error handling
+- **Seamless Navigation**: Fluid transitions between all game screens
+- **Real-time Competition**: Live global leaderboard updates and scoring
 
 ---
 
@@ -159,43 +216,49 @@ Unlike endless trivia games, IQlympics creates genuine stakes with its 5-wrong-a
 - Blue wave background with floating card design
 
 **Reddit Integration**:
-- Native Devvit platform integration for seamless Reddit experience
-- Automatic user authentication through Reddit's system
-- Post-based game deployment with full-screen launch capability
-- Express server backend with Redis persistence for game state, player data, and leaderboard tracking
+- **Engaging Splash Screen**: Beautiful React-based splash screen displaying live top 3 country podium with medals and flags
+- **Full React Application**: Complete trivia experience running in webview mode within Reddit posts
+- **Live Data Integration**: Splash screen fetches real-time leaderboard data via `/api/splash` endpoint to showcase current top countries
+- **Seamless Launch**: "🎮 Join Competition" button transitions smoothly from splash to country selection or gameplay
+- **Automatic Authentication**: Reddit user authentication handled automatically by Devvit middleware
+- **Express Server Backend**: Redis persistence for game state, player data, and leaderboard tracking
 
 ## Development Status
 
 **Current Status**: ✅ **PRODUCTION READY** - Complete Game Implementation
 
-### ✅ **Fully Implemented & Tested**
+### ✅ **Fully Implemented & Tested Features**
 
 **Complete Game Flow**:
-- ✅ Player registration with country selection (195+ countries with authentic flags and real-time search)
-- ✅ Real-time trivia gameplay with multiple-choice questions and immediate visual feedback
-- ✅ Strategic skip system with exactly 5 skips per game session and live counter display
-- ✅ Live leaderboard with top 5 country rankings and personal contribution tracking
-- ✅ Game over handling after 5 incorrect answers with professional elimination screen
-- ✅ Seamless navigation between all game screens with proper state management
-- ✅ Automatic player detection and game state restoration for returning users
+- ✅ **Engaging Splash Screen**: Dynamic podium display with live top 3 countries, medals, and "Join Competition" call-to-action
+- ✅ **Player Registration**: Country selection from 195+ countries with authentic flags and real-time search functionality
+- ✅ **Real-time Trivia Gameplay**: Multiple-choice questions with immediate visual feedback and smooth animations
+- ✅ **Strategic Skip System**: Exactly 3 skips per game session with live counter display and strategic decision-making
+- ✅ **Live Global Leaderboard**: Top 5 country rankings with personal contribution tracking and animated progress bars
+- ✅ **Game Over Handling**: Professional elimination screen after 5 incorrect answers with clear messaging
+- ✅ **Seamless Navigation**: Fluid transitions between all game screens with proper state management
+- ✅ **Smart Player Detection**: Automatic detection of returning players vs. new player registration
 
 **Core Gameplay Mechanics**:
 - ✅ **Question Display**: Clean, centered format with four multiple-choice options in mobile-optimized vertical layout
-- ✅ **Answer Feedback**: Blue selection highlighting with loading spinner, green for correct (with pulse), red for incorrect (with shake) animations
-- ✅ **Skip System**: Strategic resource management with 3 starting skips and real-time counter (⏭️ button with remaining count)
-- ✅ **Elimination System**: Game over after 5 incorrect answers with professional elimination screen and cancel icon
+- ✅ **Answer Feedback System**: 
+  - Blue selection highlighting with loading spinner during submission
+  - Green success animation with pulse effect for correct answers
+  - Red shake animation for incorrect answers
+  - 2-second feedback display before auto-advancing to next question
+- ✅ **Skip System**: Strategic resource management with 3 starting skips and real-time counter (⏭️ button)
+- ✅ **Elimination System**: Game over after exactly 5 incorrect answers with professional elimination screen
 - ✅ **Score Tracking**: Individual contributions to country totals with animated percentage calculations
-- ✅ **Leaderboard**: Top 5 countries display with authentic flags, full country names, and point totals
-- ✅ **Compact Navigation**: Clean header design with gameplay (📊 leaderboard icon) and leaderboard (← back button) controls
-- ✅ **Auto-progression**: Automatic advancement to next question after 2-second feedback display
+- ✅ **Leaderboard Display**: Top 5 countries with authentic flags, full country names, point totals, and medal styling
+- ✅ **Compact Navigation**: Clean header design with leaderboard access (📊) and back navigation (←) controls
 
 **Professional UI & UX**:
-- ✅ Mobile-first responsive design with card-based layout and blue wave background
-- ✅ Touch-optimized interactions with proper button sizing (minimum 44px height) and spacing
-- ✅ Smooth animations for answer feedback, loading states, and page transitions
-- ✅ Professional loading indicators and comprehensive error handling with retry functionality
-- ✅ Accessibility support with proper ARIA labels and keyboard navigation
-- ✅ Country search with real-time filtering and visual flag displays
+- ✅ **Mobile-First Design**: Responsive card-based layout with blue wave background optimized for Reddit's mobile users
+- ✅ **Touch Optimization**: Proper button sizing (minimum 44px height), spacing, and touch-friendly interactions
+- ✅ **Smooth Animations**: Professional CSS animations for answer feedback, loading states, and page transitions
+- ✅ **Loading States**: Professional loading indicators and comprehensive error handling with retry functionality
+- ✅ **Accessibility**: Proper ARIA labels, keyboard navigation, and screen reader support
+- ✅ **Country Search**: Real-time filtering with visual flag displays and live country count updates
 
 **Technical Implementation**:
 - ✅ **Type Safety**: Complete TypeScript implementation with strict type checking across client, server, and shared modules
@@ -203,14 +266,22 @@ Unlike endless trivia games, IQlympics creates genuine stakes with its 5-wrong-a
 - ✅ **API Integration**: Full client-server communication using fetch with proper error handling and retry logic
 - ✅ **State Management**: Complete app state handling across all game screens with proper navigation flow
 - ✅ **Build System**: Optimized Vite configuration with TypeScript project references and hot reloading
-- ✅ **Component Architecture**: Modular React components with proper separation of concerns
+- ✅ **Component Architecture**: Modular React components with proper separation of concerns and reusability
 
 ### 🎮 **Ready for Reddit Deployment**
 
-The game provides a complete, polished experience:
-1. **App Launch & Player Check** → 2. **Country Selection** (if new) → 3. **Trivia Questions** → 4. **Strategic Skip Usage** → 5. **Leaderboard Viewing** → 6. **Game Over** (after 5 wrong answers) → 7. **Final Standings**
+The game provides a complete, polished experience with the following flow:
 
-All core mechanics are fully functional with comprehensive error handling, smooth animations, and mobile-optimized design, ready for Reddit users to enjoy. The game features a complete elimination system where players face strategic decisions with each question, knowing that 5 incorrect answers will end their session.
+**Complete User Journey**:
+1. **Splash Screen** (live top 3 country podium with medals) 
+2. **Country Selection** (new players only - 195+ countries with search)
+3. **Trivia Questions** (multiple-choice with visual feedback)
+4. **Strategic Skip Usage** (3 skips with live counter)
+5. **Leaderboard Viewing** (top 5 countries + personal contribution)
+6. **Game Over** (after 5 wrong answers with professional screen)
+7. **Final Standings** (leaderboard access from game over state)
+
+All core mechanics are fully functional with comprehensive error handling, smooth animations, and mobile-optimized design. The game features a complete elimination system where players face strategic decisions with each question, knowing that 5 incorrect answers will end their session, creating genuine tension and engagement.
 
 ### For Developers
 

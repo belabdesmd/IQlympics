@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Loading, Error, CreatePlayer, Gameplay, Leaderboard, GameOver } from './components';
+import React, { useState } from 'react';
+import { Loading, Error, CreatePlayer, Gameplay, Leaderboard, GameOver, Splash } from './components';
 import { apiClient } from './services/api';
 import type { Player, GameStatus } from '../shared/types';
 
 // App state type definition
-type AppView = 'loading' | 'createPlayer' | 'gameplay' | 'leaderboard' | 'gameOver' | 'error';
+type AppView = 'splash' | 'loading' | 'createPlayer' | 'gameplay' | 'leaderboard' | 'gameOver' | 'error';
 
 interface AppState {
   currentView: AppView;
   player: Player | null;
+  gameStatus: GameStatus | null;
   error: string | null;
   isLoading: boolean;
 }
 
 export const App: React.FC = () => {
   const [state, setState] = useState<AppState>({
-    currentView: 'loading',
+    currentView: 'splash',
     player: null,
+    gameStatus: null,
     error: null,
-    isLoading: true
+    isLoading: false
   });
 
   // Run the initialization logic
@@ -30,13 +32,25 @@ export const App: React.FC = () => {
       const playerResponse = await apiClient.getPlayer();
 
       if (playerResponse.status === 'success' && playerResponse.data) {
-        // Player exists, go to Gameplay
-        setState(prev => ({
-          ...prev,
-          player: playerResponse.data!,
-          currentView: 'gameplay',
-          isLoading: false
-        }));
+        // Player exists, check game status (Requirement 2.1, 2.2)
+        const gameStatusResponse = await apiClient.getGameStatus();
+        
+        if (gameStatusResponse.status === 'success' && gameStatusResponse.data) {
+          setState(prev => ({
+            ...prev,
+            player: playerResponse.data!,
+            gameStatus: gameStatusResponse.data!,
+            currentView: gameStatusResponse.data!.gameover ? 'gameOver' : 'gameplay',
+            isLoading: false
+          }));
+        } else {
+          setState(prev => ({
+            ...prev,
+            error: gameStatusResponse.error || 'Failed to load game status',
+            currentView: 'error',
+            isLoading: false
+          }));
+        }
       } else {
         // No player exists, show create player screen
         setState(prev => ({
@@ -56,17 +70,17 @@ export const App: React.FC = () => {
     }
   };
 
-  // Initial player check and routing logic - runs only once
-  useEffect(() => {
+  // Handle joining competition from splash screen
+  const handleJoinCompetition = () => {
+    setState(prev => ({ ...prev, currentView: 'loading', isLoading: true }));
     initializeApp();
-  }, []);
+  };
 
   // Navigation functions
   const navigateToGameplay = (player: Player, gameStatus: GameStatus) => {
     setState(prev => ({
       ...prev,
       player,
-      gameStatus,
       currentView: gameStatus.gameover ? 'gameOver' : 'gameplay',
       error: null
     }));
@@ -83,7 +97,7 @@ export const App: React.FC = () => {
   const navigateBackToGameplay = () => {
     setState(prev => ({
       ...prev,
-      currentView: 'gameplay',
+      currentView: prev.gameStatus?.gameover ? 'gameOver' : 'gameplay',
       error: null
     }));
   };
@@ -117,6 +131,9 @@ export const App: React.FC = () => {
   // Render current view based on app state
   const renderCurrentView = () => {
     switch (state.currentView) {
+      case 'splash':
+        return <Splash onJoinCompetition={handleJoinCompetition} />;
+
       case 'loading':
         return <Loading/>;
 

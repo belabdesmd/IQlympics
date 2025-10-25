@@ -123,7 +123,7 @@ app.post('/api/gameplay/answer', async (req: Request, res: Response): Promise<vo
 // Skip Question
 app.get('/api/gameplay/skip', async (_req: Request, res: Response): Promise<void> => {
   try {
-    console.log("SKIPPING")
+    console.log("SKIPPING");
     // get skips
     const remainingSkips = await PlayersMockServices.getRemainingSkips("doualrkos", "postId");
 
@@ -140,7 +140,7 @@ app.get('/api/gameplay/skip', async (_req: Request, res: Response): Promise<void
       });
     } else res.status(404).json({status: 'error', message: 'Error generating Question'});
   } catch (error) {
-    console.log("ERROR CAUGHT?")
+    console.log("ERROR CAUGHT?");
     console.error('Error processing skip:', error);
     res.status(500).json({
       status: 'error',
@@ -156,6 +156,20 @@ app.get('/api/leaderboard', async (_req: Request, res: Response): Promise<void> 
       status: 'success',
       data: await LeaderboardMockServices.getLeaderboard("doularkos")
     });
+  } catch (error) {
+    console.error('Error getting leaderboard:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to get leaderboard',
+    });
+  }
+});
+
+// Get top 3 countries
+app.get('/api/splash', async (_req, res): Promise<void> => {
+  try {
+    // return
+    res.json({status: 'success', data: await LeaderboardMockServices.getTop3Countries()});
   } catch (error) {
     console.error('Error getting leaderboard:', error);
     res.status(500).json({

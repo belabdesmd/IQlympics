@@ -2260,3 +2260,244 @@ svg[aria-hidden="true"] {
 .btn:hover svg {
   color: inherit;
 }
+/* Splash component styles */
+.splash-container {
+  background: #0AA4FC url('/uuundulate.svg');
+  background-size: cover;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.splash-podium {
+  animation: slideInUp 0.8s ease-out 0.2s both;
+}
+
+.podium-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+}
+
+.podium-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.podium-medal {
+  font-size: 48px;
+  animation: bounce 0.6s ease-out 0.5s both;
+}
+
+.podium-country-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  min-width: 140px;
+  backdrop-filter: blur(10px);
+}
+
+.podium-flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.podium-country-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: black;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.podium-points {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0AA4FC;
+}
+
+.podium-rectangle {
+  width: 148px;
+  background: black;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Different heights for podium positions */
+.podium-item.first .podium-rectangle {
+  height: 140px; /* Tallest for 1st place */
+}
+
+.podium-item.second .podium-rectangle {
+  height: 110px; /* Medium for 2nd place */
+}
+
+.podium-item.third .podium-rectangle {
+  height: 80px; /* Shortest for 3rd place */
+}
+
+.splash-actions {
+  margin-top: 32px;
+  animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+.splash-join-button {
+  font-size: 20px;
+  padding: 16px 32px;
+  min-width: 250px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.splash-join-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.splash-description {
+  margin-top: 12px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-out 0.6s both;
+}
+
+.splash-description p {
+  font-size: 18px;
+  color: white;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  line-height: 1.5;
+}
+
+/* Responsive design for splash */
+@media (max-width: 768px) {
+  .splash-main-title {
+    font-size: 36px;
+  }
+
+  .splash-subtitle {
+    font-size: 24px;
+  }
+
+  .podium-container {
+    gap: 12px;
+  }
+
+  .podium-medal {
+    font-size: 36px;
+  }
+
+  .podium-country-info {
+    padding: 12px;
+    min-width: 120px;
+  }
+
+  .podium-country-name {
+    font-size: 12px;
+  }
+
+  .podium-points {
+    font-size: 14px;
+  }
+
+  .podium-rectangle {
+    width: 60px;
+  }
+
+  .podium-item.first .podium-rectangle {
+    height: 100px;
+  }
+
+  .podium-item.second .podium-rectangle {
+    height: 75px;
+  }
+
+  .podium-item.third .podium-rectangle {
+    height: 50px;
+  }
+
+  .splash-join-button {
+    font-size: 18px;
+    padding: 14px 28px;
+    min-width: 220px;
+  }
+
+  .splash-description p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .splash-main-title {
+    font-size: 28px;
+  }
+
+  .splash-subtitle {
+    font-size: 20px;
+  }
+
+  .podium-container {
+    gap: 8px;
+  }
+
+  .podium-medal {
+    font-size: 28px;
+  }
+
+  .podium-country-info {
+    padding: 10px;
+    min-width: 100px;
+  }
+
+  .podium-country-name {
+    font-size: 11px;
+  }
+
+  .podium-points {
+    font-size: 12px;
+  }
+
+  .podium-rectangle {
+    width: 50px;
+  }
+
+  .podium-item.first .podium-rectangle {
+    height: 80px;
+  }
+
+  .podium-item.second .podium-rectangle {
+    height: 60px;
+  }
+
+  .podium-item.third .podium-rectangle {
+    height: 40px;
+  }
+
+  .splash-join-button {
+    font-size: 16px;
+    padding: 12px 24px;
+    min-width: 200px;
+  }
+
+  .splash-description p {
+    font-size: 14px;
+  }
+}

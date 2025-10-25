@@ -20,3 +20,6 @@ export { default as Leaderboard } from './Leaderboard/Leaderboard';
 
 // GameOver component
 export { GameOver } from './GameOver';
+
+// Splash component
+export { default as Splash } from './Splash/Splash';

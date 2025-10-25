@@ -103,7 +103,7 @@ export class APIClient {
    * Check if a player exists for the current user
    */
   async getPlayer(): Promise<ApiResponse<Player>> {
-    return this.fetchWithErrorHandling<Player>('/api/player', {}, isPlayer);
+    return this.fetchWithErrorHandling<Player>('/api//player', {}, isPlayer);
   }
 
   /**
@@ -149,6 +149,16 @@ export class APIClient {
    */
   async getLeaderboard(): Promise<ApiResponse<Leaderboard>> {
     return this.fetchWithErrorHandling<Leaderboard>('/api/leaderboard', {}, isLeaderboard);
+  }
+
+  /**
+   * Get the top 3 countries for the splash screen
+   */
+  async getTop3(): Promise<ApiResponse<Array<{ countryCode: string, points: number }>>> {
+    return this.fetchWithErrorHandling<Array<{
+      countryCode: string,
+      points: number
+    }>>('/api/splash');
   }
 }
 

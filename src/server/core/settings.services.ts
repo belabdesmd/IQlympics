@@ -15,7 +15,7 @@ export class SettingsServices {
 
   static async getLogs(subredditId: string) {
     const logsData = await redis.get(keys.logs(subredditId));
-    return logsData ? JSON.parse(logsData) as {postId: string, jobId: string} : undefined;
+    return logsData ? JSON.parse(logsData) as { postId: string, jobId: string } : undefined;
   }
 
   static async setTheme(subredditId: string, theme: string): Promise<void> {
@@ -29,8 +29,14 @@ export class SettingsServices {
   static async createPost(subredditName: string) {
     const post = await reddit.submitCustomPost({
       title: "Play IQlympics",
-      subredditName: subredditName
+      subredditName: subredditName,
+      splash: {
+        appDisplayName: 'IQlympics',
+        backgroundUri: 'transparent.png', // HACK: Avoids default pattern
+      },
     });
+
+    // TODO: go to actual post!
 
     return post.id;
   }
@@ -57,7 +63,7 @@ export class SettingsServices {
 
   static async deletePost(postId: string) {
     const post = await reddit.getPostById(T3(postId));
-    if(!post.isRemoved()) await post.remove();
+    if (!post.isRemoved()) await post.remove();
   }
 
   static async cancelJob(jobId: string) {
