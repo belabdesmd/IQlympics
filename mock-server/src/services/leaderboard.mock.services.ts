@@ -51,10 +51,21 @@ export class LeaderboardMockServices {
       const playerPoints = await redis.zScore(keys.points(player.countryCode), username) || 0;
       const contributionPercentage = playerCountryPoints > 0 ? (playerPoints / playerCountryPoints) * 100 : 0;
 
+      // Get Top Player
+      const pointsKey = keys.points(player.countryCode);
+      const totalCount = await redis.zCard(pointsKey);
+      const startIndex = Math.max(0, totalCount - 1);
+      const endIndex = totalCount - 1;
+      const topPlayer = (await redis.zRange(pointsKey, startIndex, endIndex))[0];
+
       const yourCountry = {
         countryCode: player.countryCode,
         points: playerCountryPoints,
-        position: playerCountryRank + 1 // Convert 0-based rank to 1-based position
+        position: playerCountryRank + 1, // Convert 0-based rank to 1-based position
+        topPlayer: {
+          username: topPlayer,
+          contribution: Math.round((await redis.zScore(pointsKey, topPlayer))! * 100) / 100
+        }
       };
 
       return {

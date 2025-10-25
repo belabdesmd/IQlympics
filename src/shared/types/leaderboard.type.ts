@@ -7,6 +7,10 @@ export interface Leaderboard {
     countryCode: string;
     points: number;
     position: number;
+    topPlayer: {
+      username: string;
+      contribution: number;
+    }
   };
   contribution: number;  // Player's contribution percentage
 }

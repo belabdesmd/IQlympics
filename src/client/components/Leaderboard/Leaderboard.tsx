@@ -161,6 +161,34 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
               </div>
             </div>
           </div>
+
+          {/* Top Player Section - only show if there's a valid top player */}
+          {leaderboard.yourCountry.topPlayer &&
+            leaderboard.yourCountry.topPlayer.username &&
+            leaderboard.yourCountry.topPlayer.username !== "" &&
+            leaderboard.yourCountry.topPlayer.contribution > 0 && (
+              <div className="top-player-container">
+                <div className="top-player-header">
+                  <span className="top-player-title">
+                    {leaderboard.yourCountry.topPlayer.contribution === leaderboard.contribution
+                      ? "🏆 You are the top player from your country!"
+                      : "🏆 Top Player from Your Country"}
+                  </span>
+                </div>
+                <div className="top-player-info">
+                  <div className="top-player-avatar">
+                    <span className="top-player-icon">👤</span>
+                  </div>
+                  <div className="top-player-details">
+                    <span className="top-player-username">{leaderboard.yourCountry.topPlayer.username}</span>
+                    <span className="top-player-score">{leaderboard.yourCountry.topPlayer.contribution.toFixed(1)}% contribution</span>
+                  </div>
+                  <div className="top-player-badge">
+                    <span className="crown-icon">👑</span>
+                  </div>
+                </div>
+              </div>
+            )}
         </div>
       </div>
     </>

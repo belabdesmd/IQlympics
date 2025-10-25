@@ -100,7 +100,7 @@ export function isLeaderboard(value: any): value is Leaderboard {
     typeof value === 'object' &&
     value !== null &&
     Array.isArray(value.topCountries) &&
-    value.topCountries.every((entry: any) => 
+    value.topCountries.every((entry: any) =>
       typeof entry === 'object' &&
       entry !== null &&
       typeof entry.countryCode === 'string' &&
@@ -111,6 +111,9 @@ export function isLeaderboard(value: any): value is Leaderboard {
     typeof value.yourCountry.position === 'number' &&
     typeof value.yourCountry.countryCode === 'string' &&
     typeof value.yourCountry.points === 'number' &&
+    value.yourCountry.topPlayer !== null &&
+    typeof value.yourCountry.topPlayer.username === 'string' &&
+    typeof value.yourCountry.topPlayer.contribution === 'number' &&
     typeof value.contribution === 'number'
   );
 }
@@ -175,7 +178,7 @@ export class ApiErrorHandler {
       'ENOTFOUND'
     ];
 
-    return networkErrorPatterns.some(pattern => 
+    return networkErrorPatterns.some(pattern =>
       error.toLowerCase().includes(pattern.toLowerCase())
     );
   }
@@ -194,7 +197,7 @@ export class ApiErrorHandler {
       '504'
     ];
 
-    return retryablePatterns.some(pattern => 
+    return retryablePatterns.some(pattern =>
       error.toLowerCase().includes(pattern.toLowerCase())
     );
   }

@@ -1,10 +1,10 @@
-# IQlympics - Country Quiz Challenge
+# IQlympics - Global Trivia Competition
 
-IQlympics is a competitive geography and trivia game built for Reddit using the Devvit platform, where players represent their countries in a global knowledge competition. Every correct answer contributes points to your nation's leaderboard position, creating a unique blend of individual skill and national pride.
+IQlympics is a competitive trivia game built for Reddit using the Devvit platform, where players represent their countries in a global knowledge competition. Every correct answer contributes points to your nation's leaderboard position, creating a unique blend of individual skill and national pride.
 
 ## What is IQlympics?
 
-IQlympics transforms traditional trivia into a patriotic team sport where players compete for their nation's glory. This Country Quiz Challenge features an engaging splash screen showcasing the current top 3 countries on a podium with medals, followed by intense trivia gameplay where every decision matters.
+IQlympics transforms traditional trivia into a patriotic team sport where players compete for their nation's glory. This trivia competition features an engaging splash screen showcasing the current top 3 countries on a podium with medals, followed by intense multiple-choice gameplay where every decision matters - you only get 5 wrong answers before elimination!
 
 ### Core Game Features
 
@@ -15,19 +15,21 @@ IQlympics transforms traditional trivia into a patriotic team sport where player
 - **📊 Personal Impact Tracking**: View your exact contribution percentage to your country's success
 - **🔥 Live Global Competition**: Watch real-time leaderboard updates as countries battle for supremacy
 - **💀 High-Stakes Elimination**: Face elimination after 5 incorrect answers, making each question a critical decision
-- **🎯 Streak System**: Build answer streaks to maximize your contribution to your country's success
+- **🎯 Streak System**: Build answer streaks (displayed with 🔥 emoji) to track your consecutive correct answers
+- **👑 Top Player Recognition**: See the top contributing player from your country with their contribution percentage
 
 The game creates genuine national pride in trivia gaming, where individual knowledge directly impacts collective national achievement. With limited skips and elimination pressure, every question becomes a strategic decision between risking an answer or preserving your precious resources.
 
 ## What Makes This Game Innovative?
 
 ### 🌍 **Collective National Competition**
-Unlike traditional solo trivia games, IQlympics transforms individual knowledge into national achievement. Every correct answer contributes points to your entire country's global ranking, creating a unique patriotic gaming experience where your knowledge directly impacts your nation's standing on the world stage.
+Unlike traditional solo trivia games, IQlympics transforms individual knowledge into national achievement. Every correct answer contributes points to your entire country's global ranking, creating a unique patriotic gaming experience where your knowledge directly impacts your nation's standing on the world stage. Players can see exactly how much they've contributed to their country's success and compete to become their nation's top player.
 
-### 🏆 **Dynamic Dual-Layer Leaderboard System**
-The sophisticated ranking system provides both macro and micro feedback:
+### 🏆 **Dynamic Multi-Layer Leaderboard System**
+The sophisticated ranking system provides comprehensive feedback across multiple levels:
 - **Global Rankings**: View the top 5 countries with their total points and authentic flag displays
 - **Personal Impact**: Track your exact contribution percentage to your country's success with animated progress visualization
+- **Top Player Recognition**: See the highest contributing player from your country with crown icon (👑) and their contribution percentage
 - **Real-time Updates**: Watch live leaderboard changes as players worldwide contribute to their nations
 - **Olympic-Style Podium**: Medal rankings (🥇🥈🥉) with proper positioning for visual impact
 
@@ -57,10 +59,11 @@ Built specifically for Reddit using Devvit technology:
 ### 🎯 **Gamified National Pride System**
 IQlympics channels competitive nationalism positively:
 - **Meaningful Contribution**: Personal contribution percentage shows exactly how each player impacts their nation
+- **Top Player Recognition**: Compete to become your country's highest contributor with crown badge (👑) recognition
 - **Collective Achievement**: Individual success directly translates to national glory
 - **Emotional Investment**: Players experience genuine pride when contributing to their country's leaderboard position
 - **Global Competition**: Real-time competition between all world nations creates ongoing engagement
-- **Streak Building**: Answer streaks amplify your contribution and create momentum for your country
+- **Streak Building**: Visual streak counter (🔥) tracks consecutive correct answers and builds momentum
 
 ### 💀 **Elimination-Based Tension System**
 Unlike endless trivia games, IQlympics creates genuine stakes:
@@ -113,13 +116,13 @@ Unlike endless trivia games, IQlympics creates genuine stakes:
      - ⏳ **Processing**: Blue highlight with loading spinner
      - 🔄 **Auto-Advance**: 2-second feedback display before next question loads
    - **Question Variety**: Diverse trivia topics covering general knowledge categories
-   - **Streak Building**: Consecutive correct answers build your streak and maximize your country contribution
+   - **Streak Building**: Consecutive correct answers build your streak (🔥) displayed below the game card
    - **Elimination Pressure**: Remember - 5 wrong answers ends your game session!
 
 4. **Strategic Skip System**
    - **Resource Management**: Start with exactly 3 skips per game - use them strategically!
    - **Skip Interface**:
-     - Skip button (⏭️) with live counter in the compact header
+     - Skip button (⏭️) with live counter in the compact header outside the game card
      - Real-time display shows remaining skips (e.g., "3", "2", "1", "0")
      - Button becomes disabled and grayed out when exhausted
    - **Strategic Decisions**:
@@ -132,9 +135,10 @@ Unlike endless trivia games, IQlympics creates genuine stakes:
    - **Compact Header Design**: Clean, minimal header positioned outside the main game card
      - Left side: Skip button with counter (⏭️ 3)
      - Right side: Leaderboard access button (📊)
+   - **Streak Display**: Fire emoji (🔥) with current streak count displayed below the game card
    - **Seamless Screen Transitions**:
      - Access leaderboard anytime during gameplay without losing progress
-     - Return to gameplay using the back arrow (←) button
+     - Return to gameplay using the back arrow (←) button positioned outside the leaderboard card
      - Game state preserved across all navigation
    - **Automatic Game Flow**:
      - Game detects elimination after 5 wrong answers
@@ -155,8 +159,12 @@ Unlike endless trivia games, IQlympics creates genuine stakes:
      - Clear visual separation from other countries
    - **Personal Impact Tracking**:
      - Exact contribution percentage to your country's total score
-     - Animated progress bars with gradient fills
+     - Animated progress bars with gradient fills and shimmer effects
      - Visual representation of your individual impact on national success
+   - **Top Player Recognition**:
+     - 🏆 "Top Player from Your Country" section (when available)
+     - Player avatar (👤), username, and contribution percentage
+     - Crown badge (👑) for the highest contributor from your nation
    - **Real-time Updates**: Leaderboard reflects live scores from all global players
 
 7. **Game Over & Session End**
@@ -279,13 +287,13 @@ The game provides a complete, polished experience with the following flow:
 **Complete User Journey**:
 1. **Splash Screen** (live top 3 country podium with medals) 
 2. **Country Selection** (new players only - 195+ countries with search)
-3. **Trivia Questions** (multiple-choice with visual feedback)
+3. **Trivia Questions** (multiple-choice with visual feedback and streak tracking 🔥)
 4. **Strategic Skip Usage** (3 skips with live counter)
-5. **Leaderboard Viewing** (top 5 countries + personal contribution)
+5. **Leaderboard Viewing** (top 5 countries + personal contribution + top player recognition)
 6. **Game Over** (after 5 wrong answers with professional screen)
 7. **Final Standings** (leaderboard access from game over state)
 
-All core mechanics are fully functional with comprehensive error handling, smooth animations, and mobile-optimized design. The game features a complete elimination system where players face strategic decisions with each question, knowing that 5 incorrect answers will end their session, creating genuine tension and engagement.
+All core mechanics are fully functional with comprehensive error handling, smooth animations, and mobile-optimized design. The game features a complete elimination system where players face strategic decisions with each question, knowing that 5 incorrect answers will end their session, creating genuine tension and engagement. Players can track their consecutive correct answers with a live streak counter and compete to become their country's top contributor.
 
 ### For Developers
 
