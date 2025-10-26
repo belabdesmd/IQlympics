@@ -107,7 +107,7 @@ export class QuestionsMockServices {
         return this.getQuestion(subredditName, -1); // return question
       } else {
         // Handle wrong answer
-        const gameOver = await PlayersMockServices.addWrong(username, postId);
+        const wrongAnswersNumber = await PlayersMockServices.addWrong(username, postId);
 
         // Subtract a point only if player has points to lose
         if (currentPlayerPoints > 0) {
@@ -119,7 +119,7 @@ export class QuestionsMockServices {
         }
 
         // Return either question (next gameplay) or null if gameover
-        return !gameOver ? this.getQuestion(subredditName, -1) : null;
+        return wrongAnswersNumber < 5 ? this.getQuestion(subredditName, -1) : null;
       }
     } catch (error) {
       console.error(`Error processing answer for ${username}:`, error);

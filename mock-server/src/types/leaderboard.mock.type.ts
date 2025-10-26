@@ -7,7 +7,7 @@ export interface Leaderboard {
     countryCode: string;
     points: number;
     position: number;
-    topPlayer: {
+    topPlayer?: {
       username: string;
       contribution: number;
     }

@@ -19,11 +19,9 @@ import {
  */
 export class APIClient {
   private readonly baseUrl: string;
-  private readonly enableLogging: boolean;
 
-  constructor(baseUrl: string = '', enableLogging: boolean = false) {
+  constructor(baseUrl: string = '') {
     this.baseUrl = baseUrl;
-    this.enableLogging = enableLogging;
   }
 
   /**
@@ -34,15 +32,7 @@ export class APIClient {
     options: RequestInit = {},
     dataValidator?: (data: any) => data is T
   ): Promise<ApiResponse<T>> {
-    console.log(endpoint);
     const url = `${this.baseUrl}${endpoint}`;
-
-    if (this.enableLogging) {
-      console.log(`[API] ${options.method || 'GET'} ${url}`, {
-        headers: options.headers,
-        body: options.body
-      });
-    }
 
     try {
       const response = await fetch(url, {
@@ -57,14 +47,7 @@ export class APIClient {
       try {
         data = await response.json();
       } catch (parseError) {
-        if (this.enableLogging) {
-          console.error(`[API] JSON parse error for ${url}:`, parseError);
-        }
         return ApiErrorHandler.createErrorResponse('Invalid response format');
-      }
-
-      if (this.enableLogging) {
-        console.log(`[API] Response ${response.status}:`, data);
       }
 
       if (!response.ok) {
@@ -90,11 +73,6 @@ export class APIClient {
       } as ApiResponse<T>;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown network error';
-
-      if (this.enableLogging) {
-        console.error(`[API] Error for ${url}:`, error);
-      }
-
       return ApiErrorHandler.createErrorResponse(errorMessage);
     }
   }
@@ -103,7 +81,7 @@ export class APIClient {
    * Check if a player exists for the current user
    */
   async getPlayer(): Promise<ApiResponse<Player>> {
-    return this.fetchWithErrorHandling<Player>('http://localhost:3000/api//player', {}, isPlayer);
+    return this.fetchWithErrorHandling<Player>('http://localhost:3000/api/player', {}, isPlayer);
   }
 
   /**

@@ -21,6 +21,7 @@ interface GameplayState {
   showFeedback: boolean;
   isSubmitting: boolean;
   streak: number;
+  wrongAnswers: number;
 }
 
 const Gameplay: React.FC<GameplayProps> = ({
@@ -37,6 +38,7 @@ const Gameplay: React.FC<GameplayProps> = ({
     showFeedback: false,
     isSubmitting: false,
     streak: 0,
+    wrongAnswers: 0,
   });
 
   // Fetch initial game status and current question
@@ -106,11 +108,12 @@ const Gameplay: React.FC<GameplayProps> = ({
       if (response.status === 'success' && response.data) {
         const data = response.data;
 
-        // Update streak based on correctness
+        // Update streak and wrong answers based on correctness
         const newStreak = isCorrect ? state.streak + 1 : 0;
+        const newWrongAnswers = isCorrect ? state.wrongAnswers : state.wrongAnswers + 1;
 
         // Show feedback for 2 seconds
-        setState(prev => ({...prev, showFeedback: true, isSubmitting: false, streak: newStreak}));
+        setState(prev => ({...prev, showFeedback: true, isSubmitting: false, streak: newStreak, wrongAnswers: newWrongAnswers}));
 
         setTimeout(() => {
           if (data.gameover) {
@@ -277,11 +280,18 @@ const Gameplay: React.FC<GameplayProps> = ({
         </div>
       </div>
 
-      {/* Streak Counter */}
-      <div className="streak-container">
-        <span className="streak-text">
-          🔥 {state.streak}
-        </span>
+      {/* Stats Row - Streak and Wrong Answers */}
+      <div className="stats-container">
+        <div className="stat-item">
+          <span className="stat-text">
+            🔥 {state.streak}
+          </span>
+        </div>
+        <div className="stat-item">
+          <span className="stat-text">
+            ❌ {(state.gameStatus?.wrongAnswersNumber ?? 0) + state.wrongAnswers}
+          </span>
+        </div>
       </div>
     </>
   );

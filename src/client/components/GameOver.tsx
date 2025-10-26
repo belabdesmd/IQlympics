@@ -24,12 +24,7 @@ export const GameOver: React.FC<GameOverProps> = ({
           </h2>
           
           <p className="game-over-message">
-            You made 5 wrong answers and can't continue playing in this session.
-          </p>
-          
-          <p className="game-over-replay-message">
-            Check out the leaderboard to see how your country is performing. 
-            You can play again in another post!
+            <strong>Disqualified!</strong> 5 wrong answers cost you this match. Represent your country again in the next session!
           </p>
         </div>
 
@@ -39,7 +34,7 @@ export const GameOver: React.FC<GameOverProps> = ({
             onClick={onNavigateToLeaderboard}
           >
             <MdLeaderboard aria-hidden="true" />
-            View Leaderboard
+            Check Leaderboard
           </Button>
         </div>
       </div>

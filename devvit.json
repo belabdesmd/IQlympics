@@ -22,6 +22,12 @@
         "forUserType": "moderator",
         "label": "Add IQlympics Gameplay",
         "location": "subreddit"
+      },
+      {
+        "endpoint": "/internal/menu/purge",
+        "forUserType": "moderator",
+        "label": "Purge Data!",
+        "location": "subreddit"
       }
     ]
   },
@@ -49,7 +55,7 @@
   },
   "permissions": {
     "http": {
-      "domains": ["cdn.jsdelivr.net"],
+      "domains": [],
       "enable": true
     },
     "redis": true,

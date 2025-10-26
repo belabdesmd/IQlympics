@@ -69,14 +69,10 @@ const Splash: React.FC<SplashProps> = ({ onJoinCompetition }) => {
     return <Error message={state.error} onRetry={handleRetry} />;
   }
 
-  if (!state.topCountries || state.topCountries.length === 0) {
-    return <Error message="No competition data available" onRetry={handleRetry} />;
-  }
-
   const { topCountries } = state;
 
   // Ensure we have at least 3 countries, pad with empty if needed
-  const paddedCountries = [...topCountries];
+  const paddedCountries = [...topCountries!];
   while (paddedCountries.length < 3) {
     paddedCountries.push({ countryCode: '', points: 0 });
   }
@@ -160,13 +156,13 @@ const Splash: React.FC<SplashProps> = ({ onJoinCompetition }) => {
             className="btn btn-primary splash-join-button"
             onClick={onJoinCompetition}
           >
-            🎮 Join Competition
+            Join IQlympics
           </button>
         </div>
 
         {/* Description */}
         <div className="splash-description">
-          <p>Test your geography knowledge and compete with players worldwide!</p>
+          <p>Your country needs you! Compete in the ultimate trivia Olympics and bring home the gold!</p>
         </div>
       </div>
     </div>

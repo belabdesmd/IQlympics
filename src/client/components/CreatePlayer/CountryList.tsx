@@ -75,9 +75,7 @@ export const CountryList: React.FC<CountryListProps> = ({
               <div className="country-flag">
                 <CountryFlag
                   countryCode={country.countryCode}
-                  countryName={country.name}
                   size="medium"
-                  className="country-flag-image"
                 />
               </div>
               

@@ -10,7 +10,7 @@ export interface Leaderboard {
     topPlayer: {
       username: string;
       contribution: number;
-    }
+    } | undefined
   };
   contribution: number;  // Player's contribution percentage
 }

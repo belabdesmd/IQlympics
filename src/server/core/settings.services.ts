@@ -27,18 +27,14 @@ export class SettingsServices {
   }
 
   static async createPost(subredditName: string) {
-    const post = await reddit.submitCustomPost({
+    return await reddit.submitCustomPost({
       title: "Play IQlympics",
       subredditName: subredditName,
       splash: {
         appDisplayName: 'IQlympics',
-        backgroundUri: 'transparent.png', // HACK: Avoids default pattern
+        backgroundUri: 'background.png', // HACK: Avoids default pattern
       },
     });
-
-    // TODO: go to actual post!
-
-    return post.id;
   }
 
   static async scheduleNextPost(hours: number, postId: string) {

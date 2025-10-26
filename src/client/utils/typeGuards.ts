@@ -64,6 +64,7 @@ export function isGameStatus(value: any): value is GameStatus {
     value !== null &&
     (value.question === undefined || isQuestion(value.question)) &&
     (value.skips === undefined || typeof value.skips === 'number') &&
+    (value.wrongAnswersNumber === undefined || typeof value.wrongAnswersNumber === 'number') &&
     typeof value.gameover === 'boolean'
   );
 }
@@ -76,7 +77,7 @@ export function isAnswer(value: any): value is Answer {
     typeof value === 'object' &&
     value !== null &&
     typeof value.gameover === 'boolean' &&
-    isQuestion(value.nextQuestion)
+    (value.nextQuestion === undefined || isQuestion(value.nextQuestion))
   );
 }
 
@@ -111,9 +112,9 @@ export function isLeaderboard(value: any): value is Leaderboard {
     typeof value.yourCountry.position === 'number' &&
     typeof value.yourCountry.countryCode === 'string' &&
     typeof value.yourCountry.points === 'number' &&
-    value.yourCountry.topPlayer !== null &&
-    typeof value.yourCountry.topPlayer.username === 'string' &&
-    typeof value.yourCountry.topPlayer.contribution === 'number' &&
+    (value.yourCountry.topPlayer === undefined ||
+      typeof value.yourCountry.topPlayer.username === 'string' &&
+      typeof value.yourCountry.topPlayer.contribution === 'number') &&
     typeof value.contribution === 'number'
   );
 }

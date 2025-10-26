@@ -56,17 +56,18 @@ export class LeaderboardServices {
       const totalCount = await redis.zCard(pointsKey);
       const startIndex = Math.max(0, totalCount - 1);
       const endIndex = totalCount - 1;
-      const topPlayer = await redis.zRange(pointsKey, startIndex, endIndex);
+      const topPlayers = await redis.zRange(pointsKey, startIndex, endIndex);
+      const topPlayer = topPlayers.length > 0 ? topPlayers[0] : undefined;
 
       // Setup Data
       const yourCountry = {
         countryCode: player.countryCode,
         points: playerCountryPoints,
         position: playerCountryRank + 1, // Convert 0-based rank to 1-based position
-        topPlayer: {
-          username: topPlayer.length > 0 ? topPlayer[0]!.member : "",
-          contribution: topPlayer.length > 0 ? Math.round(topPlayer[0]!.score * 100) / 100 : 0,
-        }
+        topPlayer: topPlayer ? {
+          username: topPlayer.member,
+          contribution: topPlayer.score > 0 ? 0 : Math.round(topPlayer.score / playerCountryPoints * 100)
+        } : undefined,
       };
 
       return {

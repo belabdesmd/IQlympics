@@ -68,10 +68,10 @@ app.post('/api/player/create', async (req: Request, res: Response): Promise<void
 app.get('/api/gameplay/status', async (_req: Request, res: Response): Promise<void> => {
   try {
     // calculate
-    const isGameover = await PlayersMockServices.isGameOver("doularkos", "postId");
+    const wrongAnswersNumber = await PlayersMockServices.getWrongAnswersNumber("doularkos", "postId");
 
     // return
-    if (isGameover) res.json({status: 'success', data: {gameover: true}});
+    if (wrongAnswersNumber >= 5) res.json({status: 'success', data: {gameover: true}});
     else {
       const skipsRemaining = await PlayersMockServices.getRemainingSkips("doularkos", "postId");
       const currentQuestionId = await PlayersMockServices.getQuestionId("doularkos", "postId");
@@ -80,7 +80,7 @@ app.get('/api/gameplay/status', async (_req: Request, res: Response): Promise<vo
       const question = await QuestionsMockServices.getQuestion("iqlympics", currentQuestionId);
       if (question) res.json({
         status: 'success',
-        data: {gameover: false, skips: skipsRemaining, question: question}
+        data: {gameover: false, skips: skipsRemaining, question, wrongAnswersNumber}
       });
       else res.status(404).json({status: 'error', message: 'Error generating Question'});
     }
@@ -123,7 +123,6 @@ app.post('/api/gameplay/answer', async (req: Request, res: Response): Promise<vo
 // Skip Question
 app.get('/api/gameplay/skip', async (_req: Request, res: Response): Promise<void> => {
   try {
-    console.log("SKIPPING");
     // get skips
     const remainingSkips = await PlayersMockServices.getRemainingSkips("doualrkos", "postId");
 

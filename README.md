@@ -15,7 +15,7 @@ IQlympics transforms traditional trivia into a patriotic team sport where player
 - **📊 Personal Impact Tracking**: View your exact contribution percentage to your country's success
 - **🔥 Live Global Competition**: Watch real-time leaderboard updates as countries battle for supremacy
 - **💀 High-Stakes Elimination**: Face elimination after 5 incorrect answers, making each question a critical decision
-- **🎯 Streak System**: Build answer streaks (displayed with 🔥 emoji) to track your consecutive correct answers
+- **🎯 Advanced Stats Tracking**: Real-time display of both your answer streak (🔥) and wrong answer count (❌) for complete performance awareness with live elimination countdown
 - **👑 Top Player Recognition**: See the top contributing player from your country with their contribution percentage
 
 The game creates genuine national pride in trivia gaming, where individual knowledge directly impacts collective national achievement. With limited skips and elimination pressure, every question becomes a strategic decision between risking an answer or preserving your precious resources.
@@ -63,7 +63,7 @@ IQlympics channels competitive nationalism positively:
 - **Collective Achievement**: Individual success directly translates to national glory
 - **Emotional Investment**: Players experience genuine pride when contributing to their country's leaderboard position
 - **Global Competition**: Real-time competition between all world nations creates ongoing engagement
-- **Streak Building**: Visual streak counter (🔥) tracks consecutive correct answers and builds momentum
+- **Advanced Performance Tracking**: Dual stat display with streak counter (🔥) for consecutive correct answers and wrong answer counter (❌) for elimination awareness
 
 ### 💀 **Elimination-Based Tension System**
 Unlike endless trivia games, IQlympics creates genuine stakes:
@@ -116,8 +116,8 @@ Unlike endless trivia games, IQlympics creates genuine stakes:
      - ⏳ **Processing**: Blue highlight with loading spinner
      - 🔄 **Auto-Advance**: 2-second feedback display before next question loads
    - **Question Variety**: Diverse trivia topics covering general knowledge categories
-   - **Streak Building**: Consecutive correct answers build your streak (🔥) displayed below the game card
-   - **Elimination Pressure**: Remember - 5 wrong answers ends your game session!
+   - **Performance Stats**: Real-time tracking of both your answer streak (🔥) and wrong answer count (❌) displayed below the game card with live elimination countdown
+   - **Elimination Pressure**: Remember - 5 wrong answers ends your game session! Watch your wrong answer counter increase with each mistake
 
 4. **Strategic Skip System**
    - **Resource Management**: Start with exactly 3 skips per game - use them strategically!
@@ -135,7 +135,7 @@ Unlike endless trivia games, IQlympics creates genuine stakes:
    - **Compact Header Design**: Clean, minimal header positioned outside the main game card
      - Left side: Skip button with counter (⏭️ 3)
      - Right side: Leaderboard access button (📊)
-   - **Streak Display**: Fire emoji (🔥) with current streak count displayed below the game card
+   - **Stats Display**: Dual performance tracking with streak counter (🔥) and wrong answer counter (❌) displayed below the game card, providing live elimination countdown
    - **Seamless Screen Transitions**:
      - Access leaderboard anytime during gameplay without losing progress
      - Return to gameplay using the back arrow (←) button positioned outside the leaderboard card
@@ -180,12 +180,12 @@ Unlike endless trivia games, IQlympics creates genuine stakes:
 ### 🎮 **Complete Game Flow Summary**
 
 **Full Gameplay Sequence**:
-1. **Splash Screen** (podium with top 3 countries) → 2. **Country Selection** (new players) → 3. **Question Answering** → 4. **Strategic Skip Usage** → 5. **Streak Building** → 6. **Leaderboard Viewing** → 7. **Elimination** (5 wrong answers) → 8. **Final Standings**
+1. **Splash Screen** (podium with top 3 countries) → 2. **Country Selection** (new players) → 3. **Question Answering** → 4. **Strategic Skip Usage** → 5. **Performance Tracking** → 6. **Leaderboard Viewing** → 7. **Elimination** (5 wrong answers) → 8. **Final Standings**
 
 **Key Gameplay Features**:
 - **High-Stakes Decision Making**: Every question matters with elimination pressure
 - **Resource Management**: Strategic use of 3 precious skips
-- **Streak System**: Build consecutive correct answer streaks for maximum impact
+- **Dual Stats System**: Track both answer streaks (🔥) and wrong answer count (❌) for complete performance awareness with live elimination countdown
 - **National Pride**: Individual success directly contributes to country rankings
 - **Mobile-First Experience**: Touch-optimized interface designed for Reddit's mobile users
 - **Instant Feedback**: Immediate visual responses to all player actions
@@ -287,7 +287,7 @@ The game provides a complete, polished experience with the following flow:
 **Complete User Journey**:
 1. **Splash Screen** (live top 3 country podium with medals) 
 2. **Country Selection** (new players only - 195+ countries with search)
-3. **Trivia Questions** (multiple-choice with visual feedback and streak tracking 🔥)
+3. **Trivia Questions** (multiple-choice with visual feedback, streak tracking 🔥, and wrong answer countdown ❌)
 4. **Strategic Skip Usage** (3 skips with live counter)
 5. **Leaderboard Viewing** (top 5 countries + personal contribution + top player recognition)
 6. **Game Over** (after 5 wrong answers with professional screen)

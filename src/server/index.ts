@@ -1,5 +1,5 @@
 import express from 'express';
-import { context, createServer, getServerPort, reddit } from '@devvit/web/server';
+import { context, createServer, getServerPort, reddit, redis } from '@devvit/web/server';
 import { UiResponse } from '@devvit/web/shared';
 import { Response } from 'express';
 import { PlayersServices } from "./core/players.services";
@@ -61,6 +61,16 @@ router.post('/internal/menu/create-post', async (_req, res: Response<UiResponse>
   }
 });
 
+// TODO: to delete
+router.post('/internal/menu/purge', async (_req, res) => {
+  const red = await reddit.getCurrentSubreddit();
+  redis.del("questions");
+  redis.del("questionIndex");
+  redis.del(`questions:${red.id}`);
+  redis.del(`questionIndex:${red.id}`);
+  res.json({showToast: "PURGED ALL DATA"});
+});
+
 // Form: Create Post Form
 router.post('/internal/form/create-post', async (req, res: Response<UiResponse>) => {
   try {
@@ -78,14 +88,16 @@ router.post('/internal/form/create-post', async (req, res: Response<UiResponse>)
     }
 
     // create post
-    const postId = await SettingsServices.createPost(subreddit.name);
+    const post = await SettingsServices.createPost(subreddit.name);
 
     // schedule next post
-    const jobId = await SettingsServices.scheduleNextPost(hours, postId)!;
+    const jobId = await SettingsServices.scheduleNextPost(hours, post.id)!;
 
     // save logs
-    await SettingsServices.setLogs(subreddit.name, postId, jobId);
+    await SettingsServices.setLogs(subreddit.name, post.id, jobId);
 
+    // go to post
+    res.json({navigateTo: post.url});
   } catch (error) {
     console.error('Error creating post:', error);
     res.json({
@@ -103,10 +115,10 @@ router.post('/internal/job/next-round', async (req, _res) => {
   await SettingsServices.deletePost(postId);
 
   // create post
-  const newPostId = await SettingsServices.createPost(subreddit.name);
+  const newPost = await SettingsServices.createPost(subreddit.name);
 
   // schedule next post
-  const jobId = await SettingsServices.scheduleNextPost(hours, newPostId)!;
+  const jobId = await SettingsServices.scheduleNextPost(hours, newPost.id)!;
 
   // save logs
   await SettingsServices.setLogs(subreddit.name, postId, jobId);
@@ -199,10 +211,10 @@ router.get('/api/gameplay/status', async (_req, res): Promise<void> => {
     }
 
     // calculate
-    const isGameover = await PlayersServices.isGameOver(username, postId);
+    const wrongAnswersNumber = await PlayersServices.getWrongAnswersNumber(username, postId);
 
     // return
-    if (isGameover) res.json({status: 'success', data: {gameover: true}});
+    if (wrongAnswersNumber >= 5) res.json({status: 'success', data: {gameover: true}});
     else {
       const skipsRemaining = await PlayersServices.getRemainingSkips(username, postId);
       const currentQuestionId = await PlayersServices.getQuestionId(username, postId);
@@ -211,7 +223,7 @@ router.get('/api/gameplay/status', async (_req, res): Promise<void> => {
       const question = await QuestionsServices.getQuestion(subredditId, currentQuestionId);
       if (question) res.json({
         status: 'success',
-        data: {gameover: false, skips: skipsRemaining, question: question}
+        data: {gameover: false, wrongAnswersNumber, skips: skipsRemaining, question}
       });
       else res.status(404).json({status: 'error', message: 'Error generating Question'});
     }

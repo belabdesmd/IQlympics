@@ -19,7 +19,7 @@ export class QuestionsServices {
       apiKey = await settings.get('API_KEY');
       if (!apiKey) {
         console.error('API_KEY not found in settings');
-        return []; // TODO: handle Error properly
+        return [];
       }
     } catch (error) {
       console.error('Error getting API key from settings:', error);
@@ -28,7 +28,7 @@ export class QuestionsServices {
 
     // Make API call to generate caption image
     const subreddit = await reddit.getCurrentSubreddit();
-    const theme = await SettingsServices.getTheme(subreddit.name);
+    const theme = await SettingsServices.getTheme(subreddit.id);
     const about = theme ? `about ${theme} ` : "";
     const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
       method: 'POST',
@@ -39,7 +39,9 @@ export class QuestionsServices {
       body: JSON.stringify({
         contents: [{
           parts: [
-            {text: `Generate 10 trivia questions ${about}with 4 options and include the index of the correct option for each question (indexes start from 0). The id should be auto-generated starting from ${nextId}`}
+            {text: `Generate 25 trivia questions ${about}with 4 options and include the index of the correct option for each question (indexes start from 0).
+            - The id should be auto-generated starting from ${nextId}
+            - The options should be short, maximum of 3-4 words`}
           ]
         }],
         generationConfig: {
@@ -125,7 +127,7 @@ export class QuestionsServices {
         return QuestionsServices.getQuestion(subredditId, -1); // return question
       } else {
         // Handle wrong answer
-        const gameOver = await PlayersServices.addWrong(username, postId);
+        const wrongAnswersNumber = await PlayersServices.addWrong(username, postId);
 
         // Subtract a point only if player has points to lose
         if (currentPlayerPoints > 0) {
@@ -137,7 +139,7 @@ export class QuestionsServices {
         }
 
         // Return either question (next gameplay) or null if gameover
-        return !gameOver ? QuestionsServices.getQuestion(subredditId, -1) : null;
+        return wrongAnswersNumber < 5 ? QuestionsServices.getQuestion(subredditId, -1) : null;
       }
     } catch (error) {
       console.error(`Error processing answer for ${username}:`, error);
