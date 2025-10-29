@@ -28,7 +28,7 @@ export class LeaderboardServices {
           };
         })
       );
-      
+
       // Sort by points descending and take top 5
       const topCountries = countriesWithScores
         .sort((a, b) => b.points - a.points)
@@ -36,7 +36,7 @@ export class LeaderboardServices {
 
       // Get player's country position and points
       const playerCountryPoints = await redis.zScore('points', player.countryCode) || 0;
-      
+
       // Calculate position by counting countries with higher scores
       const higherScoringCountries = await Promise.all(
         allCountriesData.map(async (item: any) => {
@@ -46,7 +46,7 @@ export class LeaderboardServices {
         })
       );
       const playerCountryRank = higherScoringCountries.reduce((sum: number, val: number) => sum + val, 0);
-      
+
       // Get player's individual contribution to their country
       const playerPoints = await redis.zScore(keys.points(player.countryCode), username) || 0;
       const contributionPercentage = playerCountryPoints > 0 ? (playerPoints / playerCountryPoints) * 100 : 0;
@@ -66,7 +66,7 @@ export class LeaderboardServices {
         position: playerCountryRank + 1, // Convert 0-based rank to 1-based position
         topPlayer: topPlayer ? {
           username: topPlayer.member,
-          contribution: topPlayer.score > 0 ? 0 : Math.round(topPlayer.score / playerCountryPoints * 100)
+          contribution: topPlayer.score > 0 ? Math.round(topPlayer.score / playerCountryPoints * 100) : 0
         } : undefined,
       };
 

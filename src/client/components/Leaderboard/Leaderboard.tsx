@@ -18,7 +18,7 @@ interface LeaderboardState {
   error: string | null;
 }
 
-const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
+const Leaderboard: React.FC<LeaderboardProps> = ({onNavigateBack}) => {
   const [state, setState] = useState<LeaderboardState>({
     leaderboard: null,
     isLoading: true,
@@ -27,7 +27,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
 
   // Fetch leaderboard data
   const fetchLeaderboard = async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState(prev => ({...prev, isLoading: true, error: null}));
 
     try {
       const response = await apiClient.getLeaderboard();
@@ -65,18 +65,18 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
   };
 
   if (state.isLoading) {
-    return <Loading message="Loading leaderboard..." />;
+    return <Loading message="Loading leaderboard..."/>;
   }
 
   if (state.error) {
-    return <Error message={state.error} onRetry={handleRetry} />;
+    return <Error message={state.error} onRetry={handleRetry}/>;
   }
 
   if (!state.leaderboard) {
-    return <Error message="No leaderboard data available" onRetry={handleRetry} />;
+    return <Error message="No leaderboard data available" onRetry={handleRetry}/>;
   }
 
-  const { leaderboard } = state;
+  const {leaderboard} = state;
 
   return (
     <>
@@ -113,7 +113,8 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
                       />
                     </div>
                     <div className="leaderboard-info">
-                      <span className="country-name">{countryData?.name || country.countryCode}</span>
+                      <span
+                        className="country-name">{countryData?.name || country.countryCode}</span>
                       <span className="country-points">{country.points} points</span>
                     </div>
                   </div>
@@ -150,13 +151,14 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
           <div className="contribution-container">
             <div className="contribution-info">
               <span className="contribution-label">Your contribution</span>
-              <span className="contribution-percentage">{leaderboard.contribution.toFixed(1)}%</span>
+              <span
+                className="contribution-percentage">{leaderboard.contribution.toFixed(1)}%</span>
             </div>
             <div className="contribution-progress">
               <div className="progress-bar">
                 <div
                   className="progress-fill"
-                  style={{ width: `${Math.min(leaderboard.contribution, 100)}%` }}
+                  style={{width: `${Math.min(leaderboard.contribution, 100)}%`}}
                 />
               </div>
             </div>
@@ -164,31 +166,30 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ onNavigateBack }) => {
 
           {/* Top Player Section - only show if there's a valid top player */}
           {leaderboard.yourCountry.topPlayer &&
-            leaderboard.yourCountry.topPlayer.username &&
-            leaderboard.yourCountry.topPlayer.username !== "" &&
-            leaderboard.yourCountry.topPlayer.contribution > 0 && (
-              <div className="top-player-container">
-                <div className="top-player-header">
+            (<div className="top-player-container">
+              <div className="top-player-header">
                   <span className="top-player-title">
                     {leaderboard.yourCountry.topPlayer.contribution === leaderboard.contribution
                       ? "🏆 You are the top player from your country!"
                       : "🏆 Top Player from Your Country"}
                   </span>
+              </div>
+              <div className="top-player-info">
+                <div className="top-player-avatar">
+                  <span className="top-player-icon">👤</span>
                 </div>
-                <div className="top-player-info">
-                  <div className="top-player-avatar">
-                    <span className="top-player-icon">👤</span>
-                  </div>
-                  <div className="top-player-details">
-                    <span className="top-player-username">{leaderboard.yourCountry.topPlayer.username}</span>
-                    <span className="top-player-score">{leaderboard.yourCountry.topPlayer.contribution.toFixed(1)}% contribution</span>
-                  </div>
-                  <div className="top-player-badge">
-                    <span className="crown-icon">👑</span>
-                  </div>
+                <div className="top-player-details">
+                  <span
+                    className="top-player-username">{leaderboard.yourCountry.topPlayer.username}</span>
+                  <span
+                    className="top-player-score">{leaderboard.yourCountry.topPlayer.contribution.toFixed(1)}% contribution</span>
+                </div>
+                <div className="top-player-badge">
+                  <span className="crown-icon">👑</span>
                 </div>
               </div>
-            )}
+            </div>)
+          }
         </div>
       </div>
     </>

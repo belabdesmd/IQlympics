@@ -4,22 +4,30 @@ import { T3 } from "@devvit/web/shared";
 // Redis key builders
 const keys = {
   subreddits: (id: string) => `subreddits:${id}`,
-  logs: (id: string) => `subreddits:${id}:logs`,
+  logsPost: (id: string) => `subreddits:${id}:logs:postId`,
+  logsJob: (id: string) => `subreddits:${id}:logs:jobId`,
 } as const;
 
 export class SettingsServices {
 
-  static async setLogs(subredditId: string, postId: string, jobId: string | undefined): Promise<void> {
-    await redis.set(keys.logs(subredditId), JSON.stringify({postId: postId, jobId: jobId}));
+  static async logsPost(subredditId: string, postId?: string) {
+    if (postId) await redis.set(keys.logsPost(subredditId), postId);
+    else await redis.del(keys.logsPost(subredditId));
+  }
+
+  static async logsJob(subredditId: string, jobId?: string) {
+    if (jobId) await redis.set(keys.logsJob(subredditId), jobId);
+    else await redis.del(keys.logsJob(subredditId));
   }
 
   static async getLogs(subredditId: string) {
-    const logsData = await redis.get(keys.logs(subredditId));
-    return logsData ? JSON.parse(logsData) as { postId: string, jobId: string } : undefined;
+    const postId = await redis.get(keys.logsPost(subredditId));
+    const jobId = await redis.get(keys.logsJob(subredditId));
+    return {postId: postId, jobId: jobId};
   }
 
-  static async setTheme(subredditId: string, theme: string): Promise<void> {
-    await redis.set(keys.subreddits(subredditId), theme);
+  static async setTheme(subredditId: string, theme?: string): Promise<void> {
+    theme ? await redis.set(keys.subreddits(subredditId), theme) : redis.del(keys.subreddits(subredditId));
   }
 
   static async getTheme(subredditId: string): Promise<string | undefined> {
@@ -28,7 +36,7 @@ export class SettingsServices {
 
   static async createPost(subredditName: string) {
     return await reddit.submitCustomPost({
-      title: "Play IQlympics",
+      title: "Join the IQlympics!",
       subredditName: subredditName,
       splash: {
         appDisplayName: 'IQlympics',
@@ -37,17 +45,13 @@ export class SettingsServices {
     });
   }
 
-  static async scheduleNextPost(hours: number, postId: string) {
+  static async scheduleNextPost(hours: number) {
     let jobId: string | undefined;
-    let hoursInMs;
 
     try {
-      hoursInMs = Number(Math.abs(hours)) * 60 * 60 * 1000;
-      const runAt = new Date(Date.now() + hoursInMs);
       jobId = await scheduler.runJob({
         name: 'iqlympics-next-round',
-        data: {hours: hours, postId: postId},
-        runAt,
+        cron: `${(new Date()).getMinutes()} */${hours} * * *`,
       });
 
       return jobId;
@@ -57,9 +61,11 @@ export class SettingsServices {
     }
   }
 
-  static async deletePost(postId: string) {
-    const post = await reddit.getPostById(T3(postId));
-    if (!post.isRemoved()) await post.remove();
+  static async deletePost(postId?: string) {
+    if (postId) {
+      const post = await reddit.getPostById(T3(postId));
+      if (!post.isRemoved()) await post.remove();
+    }
   }
 
   static async cancelJob(jobId: string) {

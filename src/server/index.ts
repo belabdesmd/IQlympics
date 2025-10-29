@@ -1,5 +1,5 @@
 import express from 'express';
-import { context, createServer, getServerPort, reddit, redis } from '@devvit/web/server';
+import { context, createServer, getServerPort, reddit } from '@devvit/web/server';
 import { UiResponse } from '@devvit/web/shared';
 import { Response } from 'express';
 import { PlayersServices } from "./core/players.services";
@@ -28,23 +28,22 @@ router.post('/internal/menu/create-post', async (_req, res: Response<UiResponse>
       showForm: {
         name: 'createPostForm',
         form: {
-          title: 'Setup IQlympics Games Settings',
-          description: 'Be one of IQlympics Game Organizers',
+          title: 'Configure IQlympics Game Settings',
+          description: 'Become an IQlympics Game Organizer',
           cancelLabel: "Cancel",
           acceptLabel: "Start Now!",
           fields: [
             {
               name: 'hours',
               label: 'Hours',
-              helpText: 'How many hours before the next Gameplay',
+              helpText: 'How many hours until the next match begins?',
               type: 'number',
-              required: true,
               defaultValue: 24,
             },
             {
               name: 'theme',
               label: 'Game Theme',
-              helpText: 'What is the theme of the game?',
+              helpText: 'Choose a theme for this IQlympics match',
               type: 'string',
               defaultValue: await SettingsServices.getTheme(subredditId),
               required: false,
@@ -61,40 +60,29 @@ router.post('/internal/menu/create-post', async (_req, res: Response<UiResponse>
   }
 });
 
-// TODO: to delete
-router.post('/internal/menu/purge', async (_req, res) => {
-  const red = await reddit.getCurrentSubreddit();
-  redis.del("questions");
-  redis.del("questionIndex");
-  redis.del(`questions:${red.id}`);
-  redis.del(`questionIndex:${red.id}`);
-  res.json({showToast: "PURGED ALL DATA"});
-});
-
 // Form: Create Post Form
 router.post('/internal/form/create-post', async (req, res: Response<UiResponse>) => {
   try {
     const {hours, theme} = req.body;
     const subreddit = await reddit.getCurrentSubreddit();
 
-    // save subreddit theme
-    if ((theme?.length ?? 0) > 0) await SettingsServices.setTheme(subreddit.id, theme);
-
     // reset subreddit details
     const logs = await SettingsServices.getLogs(subreddit.id);
-    if (logs) {
-      await SettingsServices.deletePost(logs.postId);
-      await SettingsServices.cancelJob(logs.jobId);
-    }
+    if (logs.postId) await SettingsServices.deletePost(logs.postId);
+    if (logs.jobId) await SettingsServices.cancelJob(logs.jobId);
 
     // create post
     const post = await SettingsServices.createPost(subreddit.name);
 
     // schedule next post
-    const jobId = await SettingsServices.scheduleNextPost(hours, post.id)!;
+    const jobId = hours > 0 ? await SettingsServices.scheduleNextPost(hours) : undefined;
 
     // save logs
-    await SettingsServices.setLogs(subreddit.name, post.id, jobId);
+    await SettingsServices.logsPost(subreddit.id, post.id);
+    if (jobId) await SettingsServices.logsJob(subreddit.id, jobId);
+
+    // save subreddit theme
+    await SettingsServices.setTheme(subreddit.id, theme);
 
     // go to post
     res.json({navigateTo: post.url});
@@ -107,25 +95,22 @@ router.post('/internal/form/create-post', async (req, res: Response<UiResponse>)
 });
 
 // Job: Schedule Next Round
-router.post('/internal/job/next-round', async (req, _res) => {
-  const {hours, postId} = req.body.data;
+router.post('/internal/job/next-round', async (_req, _res) => {
   const subreddit = await reddit.getCurrentSubreddit();
 
-  // delete post
-  await SettingsServices.deletePost(postId);
+  // delete old post
+  await SettingsServices.deletePost((await SettingsServices.getLogs(subreddit.id)).postId);
 
   // create post
   const newPost = await SettingsServices.createPost(subreddit.name);
 
-  // schedule next post
-  const jobId = await SettingsServices.scheduleNextPost(hours, newPost.id)!;
-
   // save logs
-  await SettingsServices.setLogs(subreddit.name, postId, jobId);
+  await SettingsServices.logsPost(subreddit.id, newPost.id);
 });
 
 // Trigger: On Post Delete
 router.post('/internal/trigger/post-delete', async (req, _res) => {
+  const subreddit = await reddit.getCurrentSubreddit();
   try {
     const postId = req.body.postId;
     if (!postId) {
@@ -133,8 +118,12 @@ router.post('/internal/trigger/post-delete', async (req, _res) => {
       return;
     }
 
-    const logs = await SettingsServices.getLogs((await reddit.getCurrentSubreddit()).id);
-    if (logs) await SettingsServices.cancelJob(logs.jobId); // post already deleted, just cancel jobId
+    const logs = await SettingsServices.getLogs(subreddit.id);
+    if (logs.jobId) {
+      await SettingsServices.cancelJob(logs.jobId);
+      await SettingsServices.logsJob(subreddit.id, undefined);
+    }
+    await SettingsServices.logsPost(subreddit.id, undefined);
     await PlayersServices.purgePostRelated(postId);
   } catch (error) {
     console.error('Error in postDelete trigger:', error);
@@ -299,11 +288,11 @@ router.get('/api/gameplay/skip', async (_req, res): Promise<void> => {
       return;
     }
 
-    // get skips
-    const remainingSkips = await PlayersServices.getRemainingSkips(username, postId);
-
     // Add skip (this increments the skip count)
     await PlayersServices.addSkip(username, postId);
+
+    // get skips
+    const remainingSkips = await PlayersServices.getRemainingSkips(username, postId);
 
     // return
     const nextQuestion = await QuestionsServices.getQuestion(subredditId, -1);

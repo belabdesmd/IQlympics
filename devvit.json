@@ -20,13 +20,7 @@
       {
         "endpoint": "/internal/menu/create-post",
         "forUserType": "moderator",
-        "label": "Add IQlympics Gameplay",
-        "location": "subreddit"
-      },
-      {
-        "endpoint": "/internal/menu/purge",
-        "forUserType": "moderator",
-        "label": "Purge Data!",
+        "label": "Create a New IQlympics Gameplay",
         "location": "subreddit"
       }
     ]

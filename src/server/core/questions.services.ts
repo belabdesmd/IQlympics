@@ -2,6 +2,7 @@ import { Question } from "../../shared/types";
 import { reddit, redis, settings } from '@devvit/web/server';
 import { PlayersServices } from "./players.services";
 import { SettingsServices } from "./settings.services";
+import { questionPrompt } from "../../shared/data/prompts";
 
 // Redis key builders
 const keys = {
@@ -37,13 +38,7 @@ export class QuestionsServices {
         'x-goog-api-key': apiKey as string,
       },
       body: JSON.stringify({
-        contents: [{
-          parts: [
-            {text: `Generate 25 trivia questions ${about}with 4 options and include the index of the correct option for each question (indexes start from 0).
-            - The id should be auto-generated starting from ${nextId}
-            - The options should be short, maximum of 3-4 words`}
-          ]
-        }],
+        contents: [{parts: [{text: questionPrompt(about, nextId)}]}],
         generationConfig: {
           responseMimeType: "application/json",
           responseSchema: {
