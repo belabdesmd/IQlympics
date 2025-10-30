@@ -55,13 +55,30 @@ export class QuestionsServices {
                 correctIndex: {type: "INTEGER"},
               }
             }
-          }
+          },
+          temperature: 1,
+          top_p: 0.85,
+          top_k: 40,
         }
       }),
     });
 
     if (!response.ok) console.error(`API call failed to generate questions: ${response.status} ${response.statusText}`);
     return JSON.parse(JSON.parse(await response.text()).candidates[0].content.parts[0].text) as Question[];
+  }
+
+  static async fetchNewQuestions(subredditId: string) {
+    const nextId = parseInt(await redis.get(keys.questionIndex(subredditId)) ?? "0");
+    const newQuestions = await this.fetchQuestionsRemotely(nextId);
+
+    console.log(newQuestions.map((question) => question.question + "\n"));
+
+    const fields: Record<string, string> = {};
+    for (const question of newQuestions) {
+      fields[String(question.id)] = JSON.stringify(question);
+    }
+    await redis.hSet(keys.questions(subredditId), fields);
+    await redis.set(keys.questionIndex(subredditId), (nextId + newQuestions.length).toString());
   }
 
   static async getQuestion(subredditId: string, questionId: number): Promise<Question | undefined> {

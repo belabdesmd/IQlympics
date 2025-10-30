@@ -1,5 +1,5 @@
 export function questionPrompt(about: string, nextId: number) {
-  return `Generate 20 trivia questions ${about}with 4 multiple-choice options each. 
+  return `Generate 20 trivia questions ${about}with 4 multiple-choice options each.
   Follow these rules strictly:
   
   - Each question must have:
